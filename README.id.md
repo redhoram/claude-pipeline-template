@@ -26,6 +26,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `CLAUDE.md` — instruksi project: stack, konvensi, alur pipeline. **Isi placeholder-nya dulu.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
 - `.claude/commands/` — `ship`
+- `.claude/skills/` — `premium-design` (skill kualitas desain bawaan yang dipakai designer)
 - `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
 
 ## Bikin project baru

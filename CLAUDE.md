@@ -23,4 +23,6 @@ This project uses 5 subagents (planner, designer, coder, tester, reviewer) in `.
 The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface).
 See `.claude/commands/ship.md` for the full flow.
 
+The **designer** consults a bundled `premium-design` skill (`.claude/skills/premium-design/`) as its quality bar — palette discipline, typography metrics, intentional motion, and context adaptation (restraint for dashboards, bold for marketing surfaces).
+
 For small/simple tasks, `/ship` isn't required — just ask Claude Code directly.
