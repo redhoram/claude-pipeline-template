@@ -26,6 +26,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `CLAUDE.md` — project instructions: stack, conventions, pipeline flow. **Fill in the placeholders first.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
 - `.claude/commands/` — `ship`
+- `.claude/skills/` — `premium-design` (bundled design-quality skill the designer enforces)
 - `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
 
 ## Start a new project
