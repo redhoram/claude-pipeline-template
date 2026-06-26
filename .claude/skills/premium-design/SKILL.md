@@ -40,6 +40,10 @@ The target is the narrow band between them: confident, restrained, intentional.
   shadow bloom, or icon nudge (`group-hover:rotate-12`). One per element, not all at once.
 - Scroll-reveal via IntersectionObserver (fade-in + slide-up), unobserve after trigger.
   Not a heavy animation library.
+- **No-JS resilience**: don't hardcode `opacity-0` as the initial JSX/HTML state — content
+  vanishes if JS fails or is slow. Apply the hidden state via a JS-added class (e.g. `js-ready`
+  on `<body>`), so the CSS default stays visible. Always add `prefers-reduced-motion: reduce`
+  to skip animations entirely for users who need it.
 - Standard transition: `transition-all duration-300 ease-in-out`. Smooth, never abrupt.
 - Every motion must have a job: reveal, feedback, or emphasis. No job → cut it.
 
