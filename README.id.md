@@ -41,16 +41,24 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `.claude/skills/` — `premium-design` (skill kualitas desain bawaan yang dipakai designer)
 - `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
 
+### Prasyarat
+
+- [Claude Code](https://claude.com/claude-code) ter-install — `/ship` itu **slash command Claude Code**, diketik di dalam sesi Claude Code di folder project (bukan script npm).
+- Toolchain stack-mu (mis. Node.js + npm) biar tester beneran bisa jalanin build/lint/test.
+
 ### Bikin project baru
 
 1. Copy `_pipeline-template` → rename folder
 2. Isi `CLAUDE.md` (ganti semua placeholder: stack, konvensi, aturan project)
 3. Scaffold stack-mu
 4. `git init`
+5. Buka Claude Code di folder itu → jalankan `/ship [deskripsi fitur]`
 
 ### Standar
 
 Yang bikin output beda dari generator instan: **terencana, teruji, dan di-review** — bukan sekadar jalan. Detail di `CLAUDE.md` + tiap file agent.
+
+Dan **gagal keras, bukan diam-diam**: coder berhenti kalau spec hilang/ambigu daripada nebak, tester lapor kegagalan apa adanya tanpa nambal, dan verdict-nya mekanis — ada satu aja kriteria FAIL atau NOT TESTED berarti nggak mungkin SHIP.
 
 ### Kredit
 

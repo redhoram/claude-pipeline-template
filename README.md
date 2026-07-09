@@ -41,16 +41,24 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `.claude/skills/` — `premium-design` (bundled design-quality skill the designer enforces)
 - `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
 
+### Prerequisites
+
+- [Claude Code](https://claude.com/claude-code) installed — `/ship` is a **Claude Code slash command**, typed inside a Claude Code session in the project folder (it's not an npm script).
+- Your stack's toolchain (e.g. Node.js + npm) so the tester can actually run build/lint/test.
+
 ### Start a new project
 
 1. Copy `_pipeline-template` → rename the folder
 2. Fill in `CLAUDE.md` (replace all placeholders: stack, conventions, project rules)
 3. Scaffold your stack
 4. `git init`
+5. Open Claude Code in the folder → run `/ship [feature description]`
 
 ### Standard
 
 What sets the output apart from instant generators: **planned, tested, and reviewed** — not just "it runs". Details in `CLAUDE.md` + each agent file.
+
+And **fail loud, not silent**: the coder stops on a missing or ambiguous spec instead of guessing, the tester reports failures verbatim without patching over them, and the verdict is mechanical — any FAIL or NOT TESTED criterion means it cannot be SHIP.
 
 ### Credit
 
