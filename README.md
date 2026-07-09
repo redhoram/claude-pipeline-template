@@ -19,6 +19,8 @@ A template framework for **apps with complex CRUD / logic** — layered features
 Complex features need planning, implementation, testing, and review kept clearly separate — so each stage is auditable and nothing slips. The flow is doc-driven: each subagent writes an artifact to `.pipeline/`, then hands off to the next stage.
 
 - **`/ship [feature description]`**: runs the 5-subagent pipeline end-to-end — planner → designer → coder → tester → reviewer. The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK).
+- **Open-questions gate**: if the planner's spec has unresolved open questions, the pipeline stops and asks you before designer/coder ever runs — no stage inherits a guess.
+- **Model tiering**: planner & reviewer run on `opus` (the leverage is in planning and judgment), coder & tester run on `sonnet` (cheap execution against a spec that's already unambiguous).
 - For small fixes/tweaks: `/ship` isn't required — just ask Claude Code directly.
 
 ### Difference from `_landing-template`
