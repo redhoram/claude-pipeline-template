@@ -19,6 +19,8 @@ Template framework untuk **aplikasi dengan CRUD / logika kompleks** — fitur be
 Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpisah jelas — biar tiap tahap bisa diaudit dan nggak ada yang kelewat. Alurnya doc-driven: tiap subagent nulis artefak ke `.pipeline/`, lalu di-handoff ke tahap berikutnya.
 
 - **`/ship [deskripsi fitur]`**: jalanin pipeline 5 subagent end-to-end — planner → designer → coder → tester → reviewer. Reviewer kasih verdict akhir (SHIP / NEEDS WORK / BLOCK).
+- **Open-questions gate**: kalau spec dari planner masih ada open question, pipeline berhenti dan nanya kamu dulu sebelum designer/coder jalan — nggak ada tahap yang mewarisi tebakan.
+- **Model tiering**: planner & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder & tester jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu).
 - Untuk fix kecil/tweak: nggak wajib `/ship` — langsung minta Claude Code biasa.
 
 ### Beda dari `_landing-template`
