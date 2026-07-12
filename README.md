@@ -28,7 +28,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 | | `_pipeline-template` (complex CRUD) | `_landing-template` (landing & simple apps) |
 |---|---|---|
 | Mode | Batch, doc-driven, fire-and-forget | Visual loop + interactive |
-| Agents | planner → designer → coder → tester → reviewer | designer → builder → qa |
+| Agents | planner → designer → coder → tester → reviewer | writer → designer → builder → qa |
 | Final gate | Reviewer (SHIP/BLOCK, security-focused) | QA (punch-list, UI/UX-focused) |
 | Command | `/ship` | `/craft` (0→1) + `/polish` (1→great) |
 | Verification | build/lint/test + scenarios | live preview: render, responsive, console |
