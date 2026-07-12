@@ -17,6 +17,7 @@ When invoked, do this:
    - **Goal** — one sentence: what this feature is for and for whom.
    - **Context** — everything the executor needs that isn't obvious from the code: relevant existing files and the patterns they establish, constraints from `CLAUDE.md`, decisions you made and why. Assume the reader has NOT seen the user's request or this conversation.
    - **Scope** — what's included. **Out of scope** — what is explicitly NOT included.
+   - **Data model** — only when the feature adds or changes persisted data; write exactly "No data changes" otherwise. For each entity/table touched: fields with types, relations/foreign keys, indexes the queries will need, and the ownership/tenant column required by `CLAUDE.md` rules (e.g. `organization_id`). Name the exact schema/migration files to create or change — the Coder implements this section verbatim, so an ambiguity here becomes a bug there.
    - **Success criteria** — a checklist (`- [ ]`) of concrete, individually verifiable statements, e.g. "- [ ] POST /api/tasks returns 201 and the row exists in the DB". No abstract phrasing like "works correctly". The Tester verifies these one by one; the Reviewer cannot SHIP unless all pass.
    - **Task breakdown** — ordered list of small tasks, each completable in one sitting, each naming the exact files to create/change. Order them so the project still builds/runs after each step where possible.
    - **Edge cases** — unusual conditions that must be handled, each tied to a success criterion or task.
