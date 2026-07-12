@@ -28,7 +28,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 | | `_pipeline-template` (CRUD kompleks) | `_landing-template` (landing & app sederhana) |
 |---|---|---|
 | Mode | Batch, doc-driven, fire-and-forget | Loop visual + interaktif |
-| Agent | planner → designer → coder → tester → reviewer | designer → builder → qa |
+| Agent | planner → designer → coder → tester → reviewer | writer → designer → builder → qa |
 | Gate akhir | Reviewer (SHIP/BLOCK, fokus keamanan) | QA (punch-list, fokus UI/UX) |
 | Command | `/ship` | `/craft` (0→1) + `/polish` (1→bagus) |
 | Verifikasi | build/lint/test + skenario | live preview: render, responsif, console |
