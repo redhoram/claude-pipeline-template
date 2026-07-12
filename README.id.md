@@ -38,8 +38,21 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `CLAUDE.md` — instruksi project: stack, konvensi, alur pipeline. **Isi placeholder-nya dulu.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
 - `.claude/commands/` — `ship`
-- `.claude/skills/` — `premium-design` (skill kualitas desain bawaan yang dipakai designer)
+- `.claude/skills/` — 4 skill bawaan yang ditegakkan para agent (matriks di bawah)
 - `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
+
+### Matriks skill
+
+Tiap agent cuma baca skill milik tahapnya — didokumentasikan di sini biar pemetaannya bisa diaudit:
+
+| Skill | Dipakai oleh | Menegakkan |
+|---|---|---|
+| `premium-design` | designer | Disiplin palet, metrik tipografi, motion yang disengaja, intensitas marketing-vs-product |
+| `secure-coding` | coder + reviewer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; reviewer mengaudit daftar yang sama lewat diff-scan §7-nya |
+| `systematic-debugging` | coder (ronde fix) | Root cause dulu sebelum fix apa pun, satu fix per penyebab, aturan 3-strikes — berhenti dan lapor, bukan terus menebak |
+| `testing-discipline` | tester | Gerbang bukti (nggak ada PASS tanpa output segar), jebakan edge-case standar, higiene async/flaky, mendeteksi suite hijau yang bohong |
+
+Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.com/trailofbits/skills) dari Trail of Bits (security diff review lebih dalam — lisensi CC BY-SA, install terpisah, jangan di-vendor ke repo MIT) dan [`webapp-testing`](https://github.com/anthropics/skills) dari Anthropic (UI testing berbasis Playwright — tambahkan per-project saat browser e2e beneran dibutuhkan).
 
 ### Prasyarat
 
