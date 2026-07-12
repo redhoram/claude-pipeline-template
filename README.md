@@ -38,8 +38,21 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `CLAUDE.md` — project instructions: stack, conventions, pipeline flow. **Fill in the placeholders first.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
 - `.claude/commands/` — `ship`
-- `.claude/skills/` — `premium-design` (bundled design-quality skill the designer enforces)
+- `.claude/skills/` — 4 bundled skills the agents enforce (matrix below)
 - `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
+
+### Skill matrix
+
+Each agent reads only the skills that belong to its stage — documented here so the mapping is auditable:
+
+| Skill | Used by | Enforces |
+|---|---|---|
+| `premium-design` | designer | Palette discipline, typography metrics, intentional motion, marketing-vs-product intensity |
+| `secure-coding` | coder + reviewer | One shared security bar (OWASP-derived): injection, authz/ownership, secrets, fail-closed errors, LLM risks. Coder applies it while writing; reviewer audits the same list via its §7 diff-scan |
+| `systematic-debugging` | coder (fix rounds) | Root cause before any fix, one fix per cause, 3-strikes rule — stop and report instead of thrashing |
+| `testing-discipline` | tester | Evidence gate (no PASS without fresh output), standard edge-case traps, async/flaky hygiene, spotting a green suite that lies |
+
+Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review — CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing — add per-project when browser e2e is actually needed).
 
 ### Prerequisites
 

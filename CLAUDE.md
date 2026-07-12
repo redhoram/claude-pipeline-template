@@ -23,6 +23,10 @@ This project uses 5 subagents (planner, designer, coder, tester, reviewer) in `.
 The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface).
 See `.claude/commands/ship.md` for the full flow.
 
-The **designer** consults a bundled `premium-design` skill (`.claude/skills/premium-design/`) as its quality bar — palette discipline, typography metrics, intentional motion, and context adaptation (restraint for dashboards, bold for marketing surfaces).
+Four bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
+the **designer** consults `premium-design` (palette discipline, typography metrics, intentional motion, context adaptation);
+the **coder** and **reviewer** share `secure-coding` — one OWASP-derived bar applied while writing and re-audited on the diff;
+the **coder** follows `systematic-debugging` on NEEDS WORK fix rounds (root cause first, 3-strikes rule);
+the **tester** follows `testing-discipline` (no PASS without fresh evidence).
 
 For small/simple tasks, `/ship` isn't required — just ask Claude Code directly.

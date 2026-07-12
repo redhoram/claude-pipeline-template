@@ -14,7 +14,7 @@ When invoked, do this:
 3. Cross-check, in order:
    - Every **Success criterion** in the spec is verified PASS in the test report.
    - The diff stays inside the spec's scope, and every deviation is declared in the changelog and reasonable.
-   - Security scan of the diff: hardcoded secrets or API keys, `.env*` files staged, injection risks (SQL/XSS/command), auth or data-exposure mistakes, and any project-specific rules from `CLAUDE.md` (e.g. tenant isolation, RLS).
+   - Security scan of the diff: run the **Reviewer diff-scan** (§7) in `.claude/skills/secure-coding/SKILL.md` step by step — secrets grep, injection, authn + ownership/tenant check per new endpoint, dangerous sinks, fail-closed errors, LLM guards — plus any project-specific rules from `CLAUDE.md` (e.g. tenant isolation, RLS). Its severity mapping binds the verdict: exposed secret, missing authz/tenant check, or injection path = BLOCK.
 4. Give one verdict:
    - **SHIP** — every success criterion PASS, no scope creep, no security findings.
    - **NEEDS WORK** — fixable gaps. Write each item as a concrete instruction the Coder can execute without asking anything back: file, problem, expected fix.
