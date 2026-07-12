@@ -16,6 +16,7 @@ When invoked, do this:
 3. Find the project's real commands: check `CLAUDE.md` first, then `package.json` scripts (or this stack's equivalent). Run build, lint, and tests if they exist. If a command doesn't exist, record that under Not tested — never invent one.
 4. Verify the spec's **Success criteria** one by one. Each item gets PASS, FAIL, or NOT TESTED plus one line of evidence (command output, observed behavior). Then try the Edge cases from the spec, plus the standard traps from the skill on any new input surface.
 4b. **Aesthetic DoD** (only if `.pipeline/design.md` has a UI spec — skip if design was marked skipped): grep for raw color classes (`text-red-`, `bg-blue-`, `text-gray-`) — all colors should trace to palette tokens. Check that a display + body font pair is set. Note any flat/generic patterns (copy-pasted markup, no hover states) for the Reviewer.
+4c. **Usability diagnostic** (only when you actually drive the UI): run the 10-question quick diagnostic from `.claude/skills/ux-research/SKILL.md` §5 on the primary flow. Each "no" goes into the report as finding + severity (0-4) + one line of evidence; flag severity 3+ explicitly for the Reviewer.
 5. Write the result to `.pipeline/test-report.md`:
    - **Status** — PASS (every criterion passes), FAIL (any criterion fails), or INCOMPLETE (no failures, but criteria left NOT TESTED).
    - **Criteria results** — the success-criteria checklist with verdict + evidence per item.
