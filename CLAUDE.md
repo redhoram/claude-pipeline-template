@@ -15,6 +15,7 @@
 - Code & comments: English
 - Communication language with user: [e.g. Indonesian / English]
 - Never commit `.env*` or any API key to Git
+- As the project grows: rules relevant to only ONE folder (e.g. `src/lib/ai/`) go in a `CLAUDE.md` inside that folder — loaded lazily only when Claude works there, keeping this root file lean.
 - [Project-specific rule — e.g. multi-tenant `organization_id` + RLS required]
 
 ## /ship pipeline
