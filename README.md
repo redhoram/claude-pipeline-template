@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-Template-D97757?logo=anthropic&logoColor=white" alt="Claude Code Template">
-  <img src="https://img.shields.io/badge/Pipeline-5%20Agents-informational" alt="5-Agent Pipeline">
+  <img src="https://img.shields.io/badge/Pipeline-6%20Agents-informational" alt="6-Agent Pipeline">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
 </p>
 
@@ -18,9 +18,9 @@ A template framework for **apps with complex CRUD / logic** — layered features
 
 Complex features need planning, implementation, testing, and review kept clearly separate — so each stage is auditable and nothing slips. The flow is doc-driven: each subagent writes an artifact to `.pipeline/`, then hands off to the next stage.
 
-- **`/ship [feature description]`**: runs the 5-subagent pipeline end-to-end — planner → designer → coder → tester → reviewer. The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK).
+- **`/ship [feature description]`**: runs the pipeline end-to-end — planner → designer → coder → tester → reviewer. The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK); on SHIP, an optional **deployer** stage prepares the change for production (env-var inventory, infra config, deploy report).
 - **Open-questions gate**: if the planner's spec has unresolved open questions, the pipeline stops and asks you before designer/coder ever runs — no stage inherits a guess.
-- **Model tiering**: planner & reviewer run on `opus` (the leverage is in planning and judgment), coder & tester run on `sonnet` (cheap execution against a spec that's already unambiguous).
+- **Model tiering**: planner & reviewer run on `opus` (the leverage is in planning and judgment), coder, tester & deployer run on `sonnet` (cheap execution against a spec that's already unambiguous).
 - For small fixes/tweaks: `/ship` isn't required — just ask Claude Code directly.
 
 ### Difference from `_landing-template`
@@ -28,7 +28,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 | | `_pipeline-template` (complex CRUD) | `_landing-template` (landing & simple apps) |
 |---|---|---|
 | Mode | Batch, doc-driven, fire-and-forget | Visual loop + interactive |
-| Agents | planner → designer → coder → tester → reviewer | writer → designer → builder → qa |
+| Agents | planner → designer → coder → tester → reviewer (→ deployer after SHIP) | writer → designer → builder → qa |
 | Final gate | Reviewer (SHIP/BLOCK, security-focused) | QA (punch-list, UI/UX-focused) |
 | Command | `/ship` | `/craft` (0→1) + `/polish` (1→great) |
 | Verification | build/lint/test + scenarios | live preview: render, responsive, console |
@@ -36,10 +36,10 @@ Complex features need planning, implementation, testing, and review kept clearly
 ### Contents
 
 - `CLAUDE.md` — project instructions: stack, conventions, pipeline flow. **Fill in the placeholders first.**
-- `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
+- `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/` — `ship`
-- `.claude/skills/` — 5 bundled skills the agents enforce (matrix below)
-- `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
+- `.claude/skills/` — 6 bundled skills the agents enforce (matrix below)
+- `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`)
 
 ### Skill matrix
 
@@ -47,9 +47,10 @@ Each agent reads only the skills that belong to its stage — documented here so
 
 | Skill | Used by | Enforces |
 |---|---|---|
+| `relational-mastery` | planner (data features only) | Normalization (3NF), FK lifecycles with explicit ON DELETE/UPDATE, index-per-query justification, ownership/tenant columns, ORM-ready schema in the spec's Data model section |
 | `premium-design` | designer | Palette discipline, typography metrics, intentional motion, marketing-vs-product intensity |
 | `ux-research` | designer + tester | Behavioral grounding: user + JTBD first, 3-5 named psychology principles per surface, Nielsen/Krug design-time checklist, dark-pattern hard-lines. Tester runs its 10-question usability diagnostic (severity 0-4) on the driven UI |
-| `secure-coding` | coder + reviewer | One shared security bar (OWASP-derived): injection, authz/ownership, secrets, fail-closed errors, LLM risks. Coder applies it while writing; reviewer audits the same list via its §7 diff-scan |
+| `secure-coding` | coder + reviewer + deployer | One shared security bar (OWASP-derived): injection, authz/ownership, secrets, fail-closed errors, LLM risks. Coder applies it while writing; reviewer audits the same list via its §7 diff-scan; deployer applies §4 to post-SHIP env/infra prep |
 | `systematic-debugging` | coder (fix rounds) | Root cause before any fix, one fix per cause, 3-strikes rule — stop and report instead of thrashing |
 | `testing-discipline` | tester | Evidence gate (no PASS without fresh output), standard edge-case traps, async/flaky hygiene, spotting a green suite that lies |
 

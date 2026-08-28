@@ -20,15 +20,17 @@
 
 ## /ship pipeline
 
-This project uses 5 subagents (planner, designer, coder, tester, reviewer) in `.claude/agents/`.
-The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface).
+This project uses 6 subagents (planner, designer, coder, tester, reviewer, deployer) in `.claude/agents/`.
+The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface; deployer is offered only after the reviewer's verdict is SHIP).
 See `.claude/commands/ship.md` for the full flow.
 
-Five bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
+Six bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
+the **planner** consults `relational-mastery` when the feature touches persisted data (normalization, FK lifecycles, index strategy for the spec's Data model section);
 the **designer** consults `premium-design` (palette discipline, typography metrics, intentional motion, context adaptation)
 and `ux-research` (user + JTBD grounding, named psychology principles, usability checklist, dark-pattern hard-lines — its 10-question diagnostic is also run by the **tester** on driven UI);
 the **coder** and **reviewer** share `secure-coding` — one OWASP-derived bar applied while writing and re-audited on the diff;
 the **coder** follows `systematic-debugging` on NEEDS WORK fix rounds (root cause first, 3-strikes rule);
-the **tester** follows `testing-discipline` (no PASS without fresh evidence).
+the **tester** follows `testing-discipline` (no PASS without fresh evidence);
+the **deployer** applies `secure-coding` §4 to env-var and infra config it prepares post-SHIP.
 
 For small/simple tasks, `/ship` isn't required — just ask Claude Code directly.

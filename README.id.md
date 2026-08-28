@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-Template-D97757?logo=anthropic&logoColor=white" alt="Claude Code Template">
-  <img src="https://img.shields.io/badge/Pipeline-5%20Agents-informational" alt="5-Agent Pipeline">
+  <img src="https://img.shields.io/badge/Pipeline-6%20Agents-informational" alt="6-Agent Pipeline">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
 </p>
 
@@ -18,9 +18,9 @@ Template framework untuk **aplikasi dengan CRUD / logika kompleks** — fitur be
 
 Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpisah jelas — biar tiap tahap bisa diaudit dan nggak ada yang kelewat. Alurnya doc-driven: tiap subagent nulis artefak ke `.pipeline/`, lalu di-handoff ke tahap berikutnya.
 
-- **`/ship [deskripsi fitur]`**: jalanin pipeline 5 subagent end-to-end — planner → designer → coder → tester → reviewer. Reviewer kasih verdict akhir (SHIP / NEEDS WORK / BLOCK).
+- **`/ship [deskripsi fitur]`**: jalanin pipeline end-to-end — planner → designer → coder → tester → reviewer. Reviewer kasih verdict akhir (SHIP / NEEDS WORK / BLOCK); kalau SHIP, tahap **deployer** opsional nyiapin perubahan buat produksi (inventaris env var, infra config, deploy report).
 - **Open-questions gate**: kalau spec dari planner masih ada open question, pipeline berhenti dan nanya kamu dulu sebelum designer/coder jalan — nggak ada tahap yang mewarisi tebakan.
-- **Model tiering**: planner & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder & tester jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu).
+- **Model tiering**: planner & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu).
 - Untuk fix kecil/tweak: nggak wajib `/ship` — langsung minta Claude Code biasa.
 
 ### Beda dari `_landing-template`
@@ -28,7 +28,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 | | `_pipeline-template` (CRUD kompleks) | `_landing-template` (landing & app sederhana) |
 |---|---|---|
 | Mode | Batch, doc-driven, fire-and-forget | Loop visual + interaktif |
-| Agent | planner → designer → coder → tester → reviewer | writer → designer → builder → qa |
+| Agent | planner → designer → coder → tester → reviewer (→ deployer setelah SHIP) | writer → designer → builder → qa |
 | Gate akhir | Reviewer (SHIP/BLOCK, fokus keamanan) | QA (punch-list, fokus UI/UX) |
 | Command | `/ship` | `/craft` (0→1) + `/polish` (1→bagus) |
 | Verifikasi | build/lint/test + skenario | live preview: render, responsif, console |
@@ -36,10 +36,10 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 ### Isi
 
 - `CLAUDE.md` — instruksi project: stack, konvensi, alur pipeline. **Isi placeholder-nya dulu.**
-- `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`
+- `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/` — `ship`
-- `.claude/skills/` — 5 skill bawaan yang ditegakkan para agent (matriks di bawah)
-- `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`)
+- `.claude/skills/` — 6 skill bawaan yang ditegakkan para agent (matriks di bawah)
+- `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`)
 
 ### Matriks skill
 
@@ -47,9 +47,10 @@ Tiap agent cuma baca skill milik tahapnya — didokumentasikan di sini biar peme
 
 | Skill | Dipakai oleh | Menegakkan |
 |---|---|---|
+| `relational-mastery` | planner (fitur berdata aja) | Normalisasi (3NF), lifecycle FK dengan ON DELETE/UPDATE eksplisit, justifikasi index per query, kolom ownership/tenant, skema siap-ORM di section Data model spec |
 | `premium-design` | designer | Disiplin palet, metrik tipografi, motion yang disengaja, intensitas marketing-vs-product |
 | `ux-research` | designer + tester | Landasan perilaku: user + JTBD dulu, 3-5 prinsip psikologi bernama per surface, checklist Nielsen/Krug saat mendesain, garis keras anti dark-pattern. Tester menjalankan diagnostik usability 10 pertanyaan (severity 0-4) pada UI yang di-drive |
-| `secure-coding` | coder + reviewer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; reviewer mengaudit daftar yang sama lewat diff-scan §7-nya |
+| `secure-coding` | coder + reviewer + deployer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; reviewer mengaudit daftar yang sama lewat diff-scan §7-nya; deployer menerapkan §4 ke persiapan env/infra pasca-SHIP |
 | `systematic-debugging` | coder (ronde fix) | Root cause dulu sebelum fix apa pun, satu fix per penyebab, aturan 3-strikes — berhenti dan lapor, bukan terus menebak |
 | `testing-discipline` | tester | Gerbang bukti (nggak ada PASS tanpa output segar), jebakan edge-case standar, higiene async/flaky, mendeteksi suite hijau yang bohong |
 
