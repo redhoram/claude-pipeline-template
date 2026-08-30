@@ -2,6 +2,26 @@
 
 [Replace EVERY placeholder in this file before starting. Write 1-2 sentences: what this project is, who it's for, and its goal.]
 
+## ⚠️ First thing in a fresh session — verify this isn't a hijacked template copy
+
+Before any other work, run `git remote -v`. If it shows
+`claude-pipeline-template.git` AND the placeholders in this file are already
+replaced (real project name above, not `[PROJECT NAME]`) — this folder was
+copied or renamed from the template and still carries its full git history +
+GitHub remote. Real risk: committing here could push unrelated project code
+to the template's public repo.
+
+Fix immediately, before continuing with anything else:
+```
+rm -rf .git && git init && git add -A && git commit -m "chore: init from _pipeline-template"
+```
+Then confirm `git remote -v` is empty and `git log --oneline` shows exactly
+one commit. Only then proceed with the user's request.
+
+Skip this check if the placeholders above are still unreplaced — that means
+this IS the original template, not a copy, and its git history must stay
+untouched.
+
 ## Stack
 
 - Frontend: [e.g. Next.js / Vite + React]
