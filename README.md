@@ -66,7 +66,7 @@ Worth knowing, deliberately **not** bundled: [`differential-review`](https://git
 1. Copy `_pipeline-template` → rename the folder
 2. Fill in `CLAUDE.md` (replace all placeholders: stack, conventions, project rules)
 3. Scaffold your stack
-4. `git init`
+4. Fresh git history: open Claude Code in the folder. On the first session it detects the copied template `.git` and resets it automatically (or do it yourself: delete the hidden `.git`, then `git init`). Plain `git init` alone does NOT remove the template's history/remote.
 5. Open Claude Code in the folder → run `/ship [feature description]`
 
 ### Standard

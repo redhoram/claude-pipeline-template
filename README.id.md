@@ -66,7 +66,7 @@ Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.
 1. Copy `_pipeline-template` → rename folder
 2. Isi `CLAUDE.md` (ganti semua placeholder: stack, konvensi, aturan project)
 3. Scaffold stack-mu
-4. `git init`
+4. Git history baru: buka Claude Code di folder itu. Di sesi pertama dia deteksi `.git` bawaan template dan reset otomatis (atau manual: hapus folder tersembunyi `.git`, lalu `git init`). `git init` doang TIDAK menghapus history/remote template.
 5. Buka Claude Code di folder itu → jalankan `/ship [deskripsi fitur]`
 
 ### Standar

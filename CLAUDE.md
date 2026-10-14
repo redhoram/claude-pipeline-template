@@ -4,23 +4,28 @@
 
 ## ⚠️ First thing in a fresh session — verify this isn't a hijacked template copy
 
-Before any other work, run `git remote -v`. If it shows
-`claude-pipeline-template.git` AND the placeholders in this file are already
-replaced (real project name above, not `[PROJECT NAME]`) — this folder was
-copied or renamed from the template and still carries its full git history +
-GitHub remote. Real risk: committing here could push unrelated project code
-to the template's public repo.
+Copying this folder (e.g. via file explorer) also copies the hidden `.git`,
+so a new project silently inherits the template's history + GitHub remote.
+Real risk: committing here could push unrelated project code to the
+template's public repo. The user copies this folder on purpose to start new
+projects; this check exists so they can do that with zero manual steps.
 
-Fix immediately, before continuing with anything else:
-```
-rm -rf .git && git init && git add -A && git commit -m "chore: init from _pipeline-template"
-```
-Then confirm `git remote -v` is empty and `git log --oneline` shows exactly
-one commit. Only then proceed with the user's request.
+Before any other work, run `git remote -v` and look at the current folder name.
 
-Skip this check if the placeholders above are still unreplaced — that means
-this IS the original template, not a copy, and its git history must stay
-untouched.
+1. **Original template: skip, touch nothing.** Folder name is
+   `_pipeline-template` or `claude-pipeline-template`.
+2. **Not a copy: skip.** Remote does not contain `claude-pipeline-template`
+   (or there is no remote).
+3. **Copy: auto-fix without asking.** Any other folder name AND remote
+   contains `claude-pipeline-template`. Placeholder state does not matter.
+   Run immediately (bash), no confirmation needed. The old `.git` is moved
+   to the temp dir, not deleted, so nothing is lost:
+   ```
+   mv .git "/tmp/$(basename "$PWD")-template-git-$(date +%Y%m%d%H%M%S)" && git init -q && git add -A && git commit -q -m "chore: init from _pipeline-template"
+   ```
+   Confirm `git remote -v` is empty and `git log --oneline` shows exactly one
+   commit. Tell the user in ONE line that the template history was reset
+   (mention the backup path), then continue with their request.
 
 ## Stack
 
