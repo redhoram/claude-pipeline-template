@@ -42,8 +42,35 @@ for every input surface the feature added:
 - **Unauthorized**: the same actions logged out, and as a DIFFERENT user — foreign
   IDs must yield 403/404, never data.
 - **Real-world text**: unicode, emoji, `O'Brien`, leading/trailing whitespace.
+- **Numbers**: division by zero, NaN, negative where only positive makes sense,
+  float drift (`0.1 + 0.2`), money or percentages that must round consistently.
+- **Time**: UTC vs local time, end-of-month and leap days, date strings parsed in a
+  different locale, anything scheduled across a daylight-saving change.
 
 Report each probe with input → observed behavior, one line each.
+
+## 2b. Silent failures (errors that never reach anyone)
+
+Grep the changed files and probe the failure path, not only the happy path:
+
+- Empty or log-only `catch {}` / `except: pass` that continues as if nothing happened.
+- Fallbacks that hide the cause: `data || []` turning "database down" into "no rows".
+  Force the dependency to fail and confirm the user sees an error, not an empty screen.
+- Generic errors that erase the reason (every failure becomes the same 500 or the same
+  toast). The user message may be generic; the log must say what failed.
+
+Each one found is a finding with the file and line. A feature that fails silently is
+not PASS even if every criterion passes.
+
+## 2c. Regression radar
+
+The diff changed something other code depends on. Before reporting, list:
+
+- Every caller of a changed function, component, hook, or endpoint (Grep for the name).
+- Changed signatures, return shapes, enum values, or side effects those callers rely on.
+
+Run or drive at least one existing caller outside the new feature. Untested callers go
+under **Not tested** by name.
 
 ## 3. Async & flaky hygiene
 
@@ -101,6 +128,8 @@ Reviewer; do NOT count it as evidence.
 
 - [ ] Every criterion verdict has a quoted evidence line (command + decisive output)
 - [ ] Spec edge cases + §2 standard traps probed on new input surfaces
+- [ ] Failure paths forced; no silent failure left unreported (§2b)
+- [ ] Callers of changed code listed and at least one exercised (§2c)
 - [ ] Zero PASS verdicts based on reading code or prior runs
 - [ ] Flakes reported as failures, not retried into PASS
 - [ ] Coder's test suite spot-checked for §4 anti-patterns

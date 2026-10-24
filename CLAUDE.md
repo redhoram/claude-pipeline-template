@@ -120,8 +120,10 @@ The `/fix [change request]` command is the lighter path for revising a feature t
 Each run archives the previous `.pipeline/` artifacts to `.pipeline/archive/<timestamp>/` instead of deleting them.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.
 
-Six bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
-the **planner** consults `relational-mastery` when the feature touches persisted data (normalization, FK lifecycles, index strategy for the spec's Data model section);
+Nine bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
+the **planner** consults `relational-mastery` when the feature touches persisted data (normalization, FK lifecycles, index strategy for the spec's Data model section),
+`api-contract-guardian` when data crosses layers (a Contract table for database, API, and UI), and `performance-profiler` when the feature reads lists or grows with usage (expected data scale);
+the **coder** follows `architecture-clean-code` while writing (layers, no dead code, no third copy) and the **reviewer** checks the diff against it, plus the contract and performance checks when they apply;
 the **designer** consults `premium-design` (palette discipline, typography metrics, intentional motion, context adaptation)
 and `ux-research` (user + JTBD grounding, named psychology principles, usability checklist, dark-pattern hard-lines — its 10-question diagnostic is also run by the **tester** on driven UI);
 the **coder** and **reviewer** share `secure-coding` — one OWASP-derived bar applied while writing and re-audited on the diff;

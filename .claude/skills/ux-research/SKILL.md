@@ -49,6 +49,29 @@ Condensed from Nielsen's 10 + Krug; check while writing the section breakdown:
 9. **Errors that help** — plain language, say what happened, offer the fix ("Email already registered — log in instead?").
 10. **No manual needed** — if it needs explanation, redesign before documenting.
 
+## 3b. Interaction states and microcopy (Designer specifies, Tester checks)
+
+Write these into `design.md` for every interactive element; they are where built UIs
+most often fall short of the design:
+
+- **Pending**: a submit button disables and shows progress on the first click, so a
+  double-click or slow network can't create two records.
+- **Loading**: content areas show a skeleton or placeholder of the final layout; buttons
+  show an inline spinner. No blank screen while data loads.
+- **Failure**: every failed request offers a way forward ("Coba lagi", edit and resend),
+  never a dead end. Optimistic updates roll back visibly when the server says no.
+- **Success**: confirm with a short toast or inline message that disappears on its own.
+- **Keyboard and focus**: Tab order follows the visual order, Esc closes modals, focus
+  stays inside an open modal and returns to the trigger when it closes.
+- **Touch targets**: at least 44x44px on touch layouts, unless `CLAUDE.md` sets another
+  size.
+- **Microcopy**: error messages say what happened and how to fix it, in the user's
+  words ("Nomor telepon harus diawali 08 atau +62"), never raw codes. Buttons are
+  verb-first and specific ("Simpan perubahan", not "Submit"/"OK"). Empty states pair a
+  sentence with the next step. Indonesian copy reads as written Indonesian, not a
+  literal translation, and the tone stays consistent across screens. For long-form
+  text, run the `humanizer` skill if it is installed.
+
 ## 4. Ethics hard-lines (violating any = design.md is rejected)
 
 - No fake scarcity or countdown timers that reset.
@@ -74,6 +97,10 @@ Each "no" becomes a finding: **question + severity + one-line evidence** in `tes
 9. Empty states: does a first-time user see guidance, not a blank void?
 10. Any §4 ethics violation on screen?
 
+Then check the §3b states on the elements the change touched: double-click a submit,
+load with slow or failed data, open and close each modal with the keyboard. Each gap is
+a finding with severity like the 10 questions.
+
 Severity scale (report it): **0** cosmetic · **1** minor annoyance · **2** hurts task completion ·
 **3** user likely fails the task · **4** catastrophic/ethics — a 3+ finding should make the
 Reviewer think NEEDS WORK regardless of green tests.
@@ -84,10 +111,12 @@ Reviewer think NEEDS WORK regardless of green tests.
 - [ ] design.md opens with who + JTBD + context of use (from spec, not invented)
 - [ ] **Principles used** section: 3-5 principles, each mapped to a concrete section
 - [ ] §3 checklist passed on the section breakdown; flows need zero explanation
+- [ ] §3b states and microcopy written for every interactive element
 - [ ] Zero §4 violations
 
 **Tester:**
 - [ ] 10-question diagnostic run on the driven UI, findings with severity in test-report
+- [ ] §3b states checked on the touched elements
 - [ ] Severity 3+ findings explicitly flagged for the Reviewer
 
 > Credits: adapted for this pipeline from [Nuclear-Marmalade/ux-psychology-skill](https://github.com/Nuclear-Marmalade/ux-psychology-skill)
