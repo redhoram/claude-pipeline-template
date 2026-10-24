@@ -1,18 +1,18 @@
 ---
 name: ux-research
-description: Use when writing a design spec or verifying a built UI. Behavioral grounding for the Designer — who the user is, which psychology principles apply to this surface, ethics hard-lines — and a 10-question usability diagnostic with severity ratings for the Tester.
+description: Use when writing a design spec or verifying a built UI. Behavioral grounding for the Designer (who the user is, which psychology principles apply to this surface, ethics hard-lines) and a 10-question usability diagnostic with severity ratings for the Tester.
 ---
 
 # UX Research
 
 Core belief: `premium-design` decides whether the UI **looks** right; this skill decides
 whether it **works for a human**. Every flow, hierarchy, and copy decision must trace to
-a reason about the user — "looks clean" is not a reason. A beautiful page that confuses
+a reason about the user: "looks clean" is not a reason. A beautiful page that confuses
 users is a failed page.
 
 ## 1. Ground the design first (Designer, before any visual decision)
 
-Answer in 2-3 sentences at the top of `design.md`, derived from `spec.md` + `CLAUDE.md` —
+Answer in 2-3 sentences at the top of `design.md`, derived from `spec.md` + `CLAUDE.md`,
 NOT from an invented persona document:
 
 - **Who** uses this surface, and **what job** are they hiring it to do (JTBD)?
@@ -21,7 +21,7 @@ NOT from an invented persona document:
 - If the spec doesn't say who the user is and it changes the design → that's an
   open question for the pipeline gate, not a guess.
 
-## 2. Principle picker — 3-5 per surface, named in the spec
+## 2. Principle picker: 3-5 per surface, named in the spec
 
 Pick ONLY what fits this surface type; list them in `design.md` under
 **Principles used**, each with WHERE it's applied. Unnamed psychology = decoration.
@@ -31,23 +31,23 @@ Pick ONLY what fits this surface type; list them in `design.md` under
 | Landing / marketing | Visual hierarchy (one focal point per viewport), Hick's law (ONE primary CTA), social proof near the ask, loss-framing in CTA copy only when true, Von Restorff (the single accent earns attention) |
 | Pricing | Anchoring (order & reference price), chunking of plan differences, cognitive-load cut (compare ≤4 things), transparency beats decoy tricks |
 | Onboarding / forms | Progressive disclosure (ask only what this step needs), chunking (groups of 3-5 fields), goal gradient (show progress), immediate inline validation, error prevention over error messages |
-| Dashboard / product | Recognition over recall (visible options, not memorized commands), consistency with existing patterns, status visibility (every async action shows state), Fitts's law (frequent targets big & close), calm defaults — no persuasion theater in a work tool |
+| Dashboard / product | Recognition over recall (visible options, not memorized commands), consistency with existing patterns, status visibility (every async action shows state), Fitts's law (frequent targets big & close), calm defaults: no persuasion theater in a work tool |
 | Checkout / critical flows | Cognitive load minimum (guest path, autofill), error prevention + forgiveness (review step, undo, edit-in-place), trust signals at the moment of commitment, no surprise costs late in the flow |
 
-## 3. Usability heuristics — design-time checklist (Designer)
+## 3. Usability heuristics: design-time checklist (Designer)
 
 Condensed from Nielsen's 10 + Krug; check while writing the section breakdown:
 
-1. **Visibility of status** — every action has visible feedback within 100ms (even "saving…").
-2. **Match the user's language** — labels use the user's words, not the schema's (`"Team"` not `"organization_id"`).
-3. **User control** — back/cancel/undo exists; destructive actions are reversible or confirmed.
-4. **Consistency** — same action, same place, same name everywhere; follow platform conventions.
-5. **Error prevention** — constrain inputs (pickers, formats shown), disable invalid submits, confirm irreversibles.
-6. **Recognition over recall** — options visible; nothing requires remembering a previous screen.
-7. **Self-evident navigation** — on any screen the user can answer: where am I, what can I do here, where's the primary action? (Krug's trunk test)
-8. **Minimalism with a job** — every element competes for attention; cut what doesn't serve the JTBD.
-9. **Errors that help** — plain language, say what happened, offer the fix ("Email already registered — log in instead?").
-10. **No manual needed** — if it needs explanation, redesign before documenting.
+1. **Visibility of status**: every action has visible feedback within 100ms (even "saving…").
+2. **Match the user's language**: labels use the user's words, not the schema's (`"Team"` not `"organization_id"`).
+3. **User control**: back/cancel/undo exists; destructive actions are reversible or confirmed.
+4. **Consistency**: same action, same place, same name everywhere; follow platform conventions.
+5. **Error prevention**: constrain inputs (pickers, formats shown), disable invalid submits, confirm irreversibles.
+6. **Recognition over recall**: options visible; nothing requires remembering a previous screen.
+7. **Self-evident navigation**: on any screen the user can answer: where am I, what can I do here, where's the primary action? (Krug's trunk test)
+8. **Minimalism with a job**: every element competes for attention; cut what doesn't serve the JTBD.
+9. **Errors that help**: plain language, say what happened, offer the fix ("Email already registered. Log in instead?").
+10. **No manual needed**: if it needs explanation, redesign before documenting.
 
 ## 3b. Interaction states and microcopy (Designer specifies, Tester checks)
 
@@ -102,7 +102,7 @@ load with slow or failed data, open and close each modal with the keyboard. Each
 a finding with severity like the 10 questions.
 
 Severity scale (report it): **0** cosmetic · **1** minor annoyance · **2** hurts task completion ·
-**3** user likely fails the task · **4** catastrophic/ethics — a 3+ finding should make the
+**3** user likely fails the task · **4** catastrophic/ethics: a 3+ finding should make the
 Reviewer think NEEDS WORK regardless of green tests.
 
 ## Done check

@@ -1,6 +1,6 @@
 ---
 name: performance-profiler
-description: Use when a feature adds or changes database queries, list or table views, exports, batch jobs, file handling, or long-lived listeners and timers. Finds the problems that only appear at real data volume: N+1 queries, unbounded queries, missing pagination, memory leaks, and heavy rendering. The Planner states the expected scale; the Reviewer checks the diff against it.
+description: Use when a feature adds or changes database queries, list or table views, exports, batch jobs, file handling, or long-lived listeners and timers. Finds the problems that only appear at real data volume, such as N+1 queries, unbounded queries, missing pagination, memory leaks, and heavy rendering. The Planner states the expected scale; the Reviewer checks the diff against it.
 ---
 
 # Performance Profiler
