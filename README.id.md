@@ -23,7 +23,8 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - **`/fix [permintaan perubahan]`**: jalur ringan buat merevisi fitur yang udah ada (ganti nama, ubah teks, rapikan layout, perbaiki bug). Sesi utama nulis spec singkat, lalu coder → tester → reviewer jalan. Revisi tetap ninggalin spec, test report, dan verdict, bukan lolos sebagai edit tanpa jejak.
 - **Model tiering**: planner, designer & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu). Model tiap agent bisa diganti per project lewat tabel `Model override` di `CLAUDE.md`, tanpa ngedit file agent.
 - **Cek visual**: tiap perubahan UI, tester merender layar yang kena di lebar yang tertulis di `CLAUDE.md`, ngeliat screenshot-nya, dan ngelaporin yang rusak walaupun nggak ada di kriteria. Severity 3 ke atas menahan SHIP.
-- **Jejak audit**: tiap run mindahin artefak `.pipeline/` sebelumnya ke `.pipeline/archive/<timestamp>/`, bukan ngehapus.
+- **Jejak audit**: tiap run mindahin artefak `.pipeline/` sebelumnya (termasuk `shots/`) ke `.pipeline/archive/<timestamp>/`, bukan ngehapus.
+- **Gerbang build dan stop fatal**: coder wajib lolos build dengan maksimal 3 percobaan perbaikan; kalau gagal, dia nulis `## BLOCKED` di changelog. `/ship` dan `/fix` ngecek keluaran tiap tahap dan menghentikan rantai kalau file hilang, pertanyaan belum terjawab, atau ada bagian `BLOCKED`, bukan maksa lanjut.
 - **Commit saat SHIP**: pipeline nawarin commit cuma untuk file di changelog, di-stage per path. Nggak pernah push tanpa konfirmasimu.
 - Untuk tweak satu baris: nggak wajib pakai command apa pun; langsung minta Claude Code biasa.
 
@@ -43,7 +44,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
 - `.claude/skills/`: 9 skill bawaan yang ditegakkan para agent (matriks di bawah)
-- `.pipeline/`: workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), dengan run lama di `.pipeline/archive/`
+- `.pipeline/`: workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), dengan run lama di `.pipeline/archive/`
 
 ### Matriks skill
 

@@ -23,7 +23,8 @@ Complex features need planning, implementation, testing, and review kept clearly
 - **`/fix [change request]`**: the lighter path for revising a feature that already exists (rename, copy change, layout tweak, bug fix). The main session writes a short spec, then coder → tester → reviewer run. Revisions still leave a spec, a test report, and a verdict behind instead of slipping through as untracked edits.
 - **Model tiering**: planner, designer & reviewer run on `opus` (the leverage is in planning and judgment), coder, tester & deployer run on `sonnet` (cheap execution against a spec that's already unambiguous). Override any agent per project in the `Model override` table of `CLAUDE.md`, without editing the agent file.
 - **Visual check**: on any UI change the tester renders each touched screen at the widths in `CLAUDE.md`, looks at the screenshots, and reports what's broken even if no criterion mentions it. Severity 3+ blocks SHIP.
-- **Audit trail**: each run moves the previous `.pipeline/` artifacts to `.pipeline/archive/<timestamp>/` instead of deleting them.
+- **Audit trail**: each run moves the previous `.pipeline/` artifacts (including `shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them.
+- **Build gate and fatal stops**: the coder must pass the build with at most 3 fix attempts, otherwise it writes `## BLOCKED` into the changelog. `/ship` and `/fix` check every stage's output and stop the chain on a missing file, unresolved questions, or a `BLOCKED` section, instead of pushing on.
 - **Commit on SHIP**: the pipeline offers to commit only the files in the changelog, staged by explicit path. It never pushes without your confirmation.
 - For one-line tweaks: neither command is required; just ask Claude Code directly.
 
@@ -43,7 +44,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
 - `.claude/skills/`: 9 bundled skills the agents enforce (matrix below)
-- `.pipeline/`: handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), with past runs in `.pipeline/archive/`
+- `.pipeline/`: handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
 

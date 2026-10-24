@@ -117,7 +117,7 @@ When Target is "none", `/ship` never offers the deployer stage.
 This project uses 6 subagents (planner, designer, coder, tester, reviewer, deployer) in `.claude/agents/`.
 The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface; deployer is offered only after the reviewer's verdict is SHIP, and never when Deployment Target is "none").
 The `/fix [change request]` command is the lighter path for revising a feature that already exists: the main session writes a short spec, then coder, tester, and reviewer run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
-Each run archives the previous `.pipeline/` artifacts to `.pipeline/archive/<timestamp>/` instead of deleting them.
+Each run archives the previous `.pipeline/` artifacts (including screenshots in `.pipeline/shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them. The coder must pass the build within 3 fix attempts or write `## BLOCKED` into the changelog, which stops the chain.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.
 
 Nine bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):

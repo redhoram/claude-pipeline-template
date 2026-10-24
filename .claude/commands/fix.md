@@ -26,4 +26,4 @@ Run this sequence IN ORDER:
 6. Call the **reviewer** subagent for the final verdict.
 7. Show the verdict and handle NEEDS WORK, BLOCK, and SHIP exactly as in step 7 of `.claude/commands/ship.md` (commit offer included; deployer only if the change is operational and Deployment Target is not "none").
 
-If any subagent reports a fatal problem mid-way, stop and report to the user. Don't force the next stage.
+The **Fatal = stop the chain** rules at the end of `.claude/commands/ship.md` apply here too: a missing output file, a `## BLOCKED` section in the changelog, or a reported broken workspace stops the chain, and you show the user what is blocked and wait.
