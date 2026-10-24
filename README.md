@@ -42,7 +42,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `CLAUDE.md` — project instructions: stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/` — `ship`, `fix`
-- `.claude/skills/` — 6 bundled skills the agents enforce (matrix below)
+- `.claude/skills/` — 9 bundled skills the agents enforce (matrix below)
 - `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
@@ -56,7 +56,10 @@ Each agent reads only the skills that belong to its stage — documented here so
 | `ux-research` | designer + tester | Behavioral grounding: user + JTBD first, 3-5 named psychology principles per surface, Nielsen/Krug design-time checklist, dark-pattern hard-lines. Tester runs its 10-question usability diagnostic (severity 0-4) on the driven UI |
 | `secure-coding` | coder + reviewer + deployer | One shared security bar (OWASP-derived): injection, authz/ownership, secrets, fail-closed errors, LLM risks. Coder applies it while writing; reviewer audits the same list via its §7 diff-scan; deployer applies §4 to post-SHIP env/infra prep |
 | `systematic-debugging` | coder (fix rounds) | Root cause before any fix, one fix per cause, 3-strikes rule — stop and report instead of thrashing |
-| `testing-discipline` | tester | Evidence gate (no PASS without fresh output), standard edge-case traps, async/flaky hygiene, spotting a green suite that lies |
+| `testing-discipline` | tester | Evidence gate (no PASS without fresh output), standard edge-case traps (including numbers and time), silent-failure hunting, regression radar on callers of changed code, async/flaky hygiene, spotting a green suite that lies |
+| `api-contract-guardian` | planner + coder + reviewer (data crossing layers) | A Contract table in the spec (database, backend validation, frontend type, nullability), enum and naming sync, ISO dates, no float money, idempotent state-changing calls, backward-compatible changes |
+| `performance-profiler` | planner + coder + reviewer (lists, queries, exports) | Expected data scale stated in the spec, no N+1 or unbounded queries, pagination, cleaned-up listeners and bounded caches, streamed large files, virtualized long lists; every finding names the scale where it breaks |
+| `architecture-clean-code` | coder + reviewer | Layer separation, no dead code left by the diff, rule of three for duplication, no circular imports, size norms as signals. Judges only what the diff adds; hard constraints in `CLAUDE.md` always win |
 
 Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review — CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing — add per-project when browser e2e is actually needed).
 

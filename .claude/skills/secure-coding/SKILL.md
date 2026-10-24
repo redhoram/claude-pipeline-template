@@ -30,6 +30,13 @@ the Reviewer audits the diff against the same list — one source of truth, no d
   Use argument arrays; resolve paths and verify they stay inside the intended root.
 - Uploads: validate type and size server-side; store outside the web root or in
   object storage; never execute or `include` an uploaded file.
+- SSRF: when the server fetches a URL the user supplied (webhooks, link previews,
+  imports), allowlist the hosts and reject private/internal addresses
+  (`localhost`, `127.0.0.1`, `169.254.x.x`, `10.x`, `192.168.x`).
+- Mass assignment: validate request bodies against an explicit schema (Zod, Pydantic,
+  Joi, or the framework's DTO). Never spread a raw body into a create/update call;
+  fields like `role`, `is_admin`, `owner_id`, `balance` must be impossible to set
+  from the client unless the spec says so.
 
 ## 2. Authentication
 
@@ -37,7 +44,10 @@ the Reviewer audits the diff against the same list — one source of truth, no d
 - Sessions/tokens: framework- or platform-issued (e.g. Supabase Auth, NextAuth) —
   don't hand-roll session IDs or JWT signing unless the spec demands it.
 - Cookies carrying sessions: `HttpOnly`, `Secure`, `SameSite` set deliberately.
-- Rate-limit login, signup, password-reset, and OTP endpoints.
+- Rate-limit login, signup, password-reset, and OTP endpoints, plus file upload and
+  webhook ingest endpoints.
+- Tokens expire; logout invalidates them server-side. If JWTs are used, the algorithm
+  is pinned (never `none`) and the signature is verified on every request.
 
 ## 3. Authorization — the #1 real-world hole
 
@@ -58,6 +68,10 @@ the Reviewer audits the diff against the same list — one source of truth, no d
   auth endpoints.
 - Collect the minimum personal data the feature needs; the spec's fields are the cap.
 - TLS/HTTPS assumptions: never disable certificate verification "temporarily".
+- CORS: never `Access-Control-Allow-Origin: *` together with credentials; list the
+  origins. Set the security headers the platform doesn't set for you
+  (`Content-Security-Policy`, `X-Content-Type-Options: nosniff`,
+  `Strict-Transport-Security`).
 
 ## 5. Errors — fail closed, leak nothing
 
@@ -93,15 +107,20 @@ the Reviewer audits the diff against the same list — one source of truth, no d
 5. Errors in new `catch` blocks: confirm nothing sensitive is returned to the
    client and auth failures deny.
 6. If the diff touches LLM calls: check §6 items one by one.
+7. Grep for request bodies passed straight into create/update calls (`...req.body`,
+   `**request.data`, `Object.assign(model, body)`), and for server-side fetches whose
+   URL comes from user input. Check CORS config for `*` with credentials.
 
 Severity mapping for the verdict: exposed secret, missing authz/tenant check,
-or injection path = **BLOCK**. Missing rate limit, verbose errors, over-broad
-logging = **NEEDS WORK**.
+injection path, SSRF to internal addresses, or a client able to set a privileged
+field (mass assignment) = **BLOCK**. Missing rate limit, verbose errors, over-broad
+logging, permissive CORS, missing security headers = **NEEDS WORK**.
 
 ## Done check
 
 - [ ] Zero secrets in code or git; `.env.example` only
-- [ ] All external input validated server-side; queries parameterized
+- [ ] All external input validated server-side against a schema; queries parameterized; no mass assignment
+- [ ] User-supplied URLs fetched server-side are allowlisted (no SSRF)
 - [ ] Every new endpoint: authn + ownership/tenant check you can point to
 - [ ] Errors fail closed and leak no internals
 - [ ] LLM calls (if any): injection boundary, output treated as untrusted, tools least-privilege, cost caps

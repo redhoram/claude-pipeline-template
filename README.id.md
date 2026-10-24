@@ -42,7 +42,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `CLAUDE.md` — instruksi project: stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/` — `ship`, `fix`
-- `.claude/skills/` — 6 skill bawaan yang ditegakkan para agent (matriks di bawah)
+- `.claude/skills/` — 9 skill bawaan yang ditegakkan para agent (matriks di bawah)
 - `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), dengan run lama di `.pipeline/archive/`
 
 ### Matriks skill
@@ -56,7 +56,10 @@ Tiap agent cuma baca skill milik tahapnya — didokumentasikan di sini biar peme
 | `ux-research` | designer + tester | Landasan perilaku: user + JTBD dulu, 3-5 prinsip psikologi bernama per surface, checklist Nielsen/Krug saat mendesain, garis keras anti dark-pattern. Tester menjalankan diagnostik usability 10 pertanyaan (severity 0-4) pada UI yang di-drive |
 | `secure-coding` | coder + reviewer + deployer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; reviewer mengaudit daftar yang sama lewat diff-scan §7-nya; deployer menerapkan §4 ke persiapan env/infra pasca-SHIP |
 | `systematic-debugging` | coder (ronde fix) | Root cause dulu sebelum fix apa pun, satu fix per penyebab, aturan 3-strikes — berhenti dan lapor, bukan terus menebak |
-| `testing-discipline` | tester | Gerbang bukti (nggak ada PASS tanpa output segar), jebakan edge-case standar, higiene async/flaky, mendeteksi suite hijau yang bohong |
+| `testing-discipline` | tester | Gerbang bukti (nggak ada PASS tanpa output segar), jebakan edge-case standar (termasuk angka dan waktu), berburu error yang ditelan diam-diam, regression radar ke pemakai kode yang diubah, higiene async/flaky, mendeteksi suite hijau yang bohong |
+| `api-contract-guardian` | planner + coder + reviewer (data lintas lapisan) | Tabel Contract di spec (database, validasi backend, tipe frontend, nullability), sinkron enum dan penamaan, tanggal ISO, uang bukan float, panggilan pengubah data yang idempotent, perubahan yang backward-compatible |
+| `performance-profiler` | planner + coder + reviewer (list, query, ekspor) | Skala data tertulis di spec, nggak ada N+1 atau query tanpa batas, paginasi, listener dibersihkan dan cache dibatasi, file besar di-stream, list panjang di-virtualisasi; tiap temuan nyebut skala tempat dia rusak |
+| `architecture-clean-code` | coder + reviewer | Pemisahan lapisan, nggak ada dead code sisa diff, aturan tiga kali untuk duplikasi, nggak ada import melingkar, ukuran file sebagai sinyal. Cuma menilai yang ditambah diff; batasan keras di `CLAUDE.md` selalu menang |
 
 Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.com/trailofbits/skills) dari Trail of Bits (security diff review lebih dalam — lisensi CC BY-SA, install terpisah, jangan di-vendor ke repo MIT) dan [`webapp-testing`](https://github.com/anthropics/skills) dari Anthropic (UI testing berbasis Playwright — tambahkan per-project saat browser e2e beneran dibutuhkan).
 
