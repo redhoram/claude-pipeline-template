@@ -12,20 +12,20 @@
 
 # _pipeline-template
 
-A template framework for **apps with complex CRUD / logic** — layered features, backend + frontend, needing a quality gate before release. Sibling of [`_landing-template`](https://github.com/redhoram/claude-landing-template) (for landing pages & simple apps), but optimized for structured feature work.
+A template framework for **apps with complex CRUD / logic**: layered features, backend + frontend, needing a quality gate before release. Sibling of [`_landing-template`](https://github.com/redhoram/claude-landing-template) (for landing pages & simple apps), but optimized for structured feature work.
 
 ### Philosophy: batch pipeline with a quality gate
 
-Complex features need planning, implementation, testing, and review kept clearly separate — so each stage is auditable and nothing slips. The flow is doc-driven: each subagent writes an artifact to `.pipeline/`, then hands off to the next stage.
+Complex features need planning, implementation, testing, and review kept clearly separate, so each stage is auditable and nothing slips. The flow is doc-driven: each subagent writes an artifact to `.pipeline/`, then hands off to the next stage.
 
-- **`/ship [feature description]`**: runs the pipeline end-to-end — planner → designer → coder → tester → reviewer. The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK); on SHIP, an optional **deployer** stage prepares the change for production (env-var inventory, infra config, deploy report).
-- **Open-questions gate**: if the planner's spec has unresolved open questions, the pipeline stops and asks you before designer/coder ever runs — no stage inherits a guess.
+- **`/ship [feature description]`**: runs the pipeline end-to-end (planner → designer → coder → tester → reviewer). The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK); on SHIP, an optional **deployer** stage prepares the change for production (env-var inventory, infra config, deploy report).
+- **Open-questions gate**: if the planner's spec has unresolved open questions, the pipeline stops and asks you before designer/coder ever runs, so no stage inherits a guess.
 - **`/fix [change request]`**: the lighter path for revising a feature that already exists (rename, copy change, layout tweak, bug fix). The main session writes a short spec, then coder → tester → reviewer run. Revisions still leave a spec, a test report, and a verdict behind instead of slipping through as untracked edits.
 - **Model tiering**: planner, designer & reviewer run on `opus` (the leverage is in planning and judgment), coder, tester & deployer run on `sonnet` (cheap execution against a spec that's already unambiguous). Override any agent per project in the `Model override` table of `CLAUDE.md`, without editing the agent file.
 - **Visual check**: on any UI change the tester renders each touched screen at the widths in `CLAUDE.md`, looks at the screenshots, and reports what's broken even if no criterion mentions it. Severity 3+ blocks SHIP.
 - **Audit trail**: each run moves the previous `.pipeline/` artifacts to `.pipeline/archive/<timestamp>/` instead of deleting them.
 - **Commit on SHIP**: the pipeline offers to commit only the files in the changelog, staged by explicit path. It never pushes without your confirmation.
-- For one-line tweaks: neither command is required — just ask Claude Code directly.
+- For one-line tweaks: neither command is required; just ask Claude Code directly.
 
 ### Difference from `_landing-template`
 
@@ -39,15 +39,15 @@ Complex features need planning, implementation, testing, and review kept clearly
 
 ### Contents
 
-- `CLAUDE.md` — project instructions: stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
-- `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
-- `.claude/commands/` — `ship`, `fix`
-- `.claude/skills/` — 9 bundled skills the agents enforce (matrix below)
-- `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), with past runs in `.pipeline/archive/`
+- `CLAUDE.md`: project instructions covering stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
+- `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
+- `.claude/commands/`: `ship`, `fix`
+- `.claude/skills/`: 9 bundled skills the agents enforce (matrix below)
+- `.pipeline/`: handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
 
-Each agent reads only the skills that belong to its stage — documented here so the mapping is auditable:
+Each agent reads only the skills that belong to its stage: documented here so the mapping is auditable:
 
 | Skill | Used by | Enforces |
 |---|---|---|
@@ -55,17 +55,17 @@ Each agent reads only the skills that belong to its stage — documented here so
 | `premium-design` | designer | Palette discipline, typography metrics, intentional motion, marketing-vs-product intensity |
 | `ux-research` | designer + tester | Behavioral grounding: user + JTBD first, 3-5 named psychology principles per surface, Nielsen/Krug design-time checklist, dark-pattern hard-lines. Tester runs its 10-question usability diagnostic (severity 0-4) on the driven UI |
 | `secure-coding` | coder + reviewer + deployer | One shared security bar (OWASP-derived): injection, authz/ownership, secrets, fail-closed errors, LLM risks. Coder applies it while writing; reviewer audits the same list via its §7 diff-scan; deployer applies §4 to post-SHIP env/infra prep |
-| `systematic-debugging` | coder (fix rounds) | Root cause before any fix, one fix per cause, 3-strikes rule — stop and report instead of thrashing |
+| `systematic-debugging` | coder (fix rounds) | Root cause before any fix, one fix per cause, 3-strikes rule: stop and report instead of thrashing |
 | `testing-discipline` | tester | Evidence gate (no PASS without fresh output), standard edge-case traps (including numbers and time), silent-failure hunting, regression radar on callers of changed code, async/flaky hygiene, spotting a green suite that lies |
 | `api-contract-guardian` | planner + coder + reviewer (data crossing layers) | A Contract table in the spec (database, backend validation, frontend type, nullability), enum and naming sync, ISO dates, no float money, idempotent state-changing calls, backward-compatible changes |
 | `performance-profiler` | planner + coder + reviewer (lists, queries, exports) | Expected data scale stated in the spec, no N+1 or unbounded queries, pagination, cleaned-up listeners and bounded caches, streamed large files, virtualized long lists; every finding names the scale where it breaks |
 | `architecture-clean-code` | coder + reviewer | Layer separation, no dead code left by the diff, rule of three for duplication, no circular imports, size norms as signals. Judges only what the diff adds; hard constraints in `CLAUDE.md` always win |
 
-Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review — CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing — add per-project when browser e2e is actually needed).
+Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review; CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing; add per-project when browser e2e is actually needed).
 
 ### Prerequisites
 
-- [Claude Code](https://claude.com/claude-code) installed — `/ship` is a **Claude Code slash command**, typed inside a Claude Code session in the project folder (it's not an npm script).
+- [Claude Code](https://claude.com/claude-code) installed: `/ship` is a **Claude Code slash command**, typed inside a Claude Code session in the project folder (it's not an npm script).
 - Your stack's toolchain (e.g. Node.js + npm) so the tester can actually run build/lint/test.
 
 ### Start a new project
@@ -78,13 +78,13 @@ Worth knowing, deliberately **not** bundled: [`differential-review`](https://git
 
 ### Standard
 
-What sets the output apart from instant generators: **planned, tested, and reviewed** — not just "it runs". Details in `CLAUDE.md` + each agent file.
+What sets the output apart from instant generators: **planned, tested, and reviewed**, not just "it runs". Details in `CLAUDE.md` + each agent file.
 
-And **fail loud, not silent**: the coder stops on a missing or ambiguous spec instead of guessing, the tester reports failures verbatim without patching over them, and the verdict is mechanical — any FAIL or NOT TESTED criterion means it cannot be SHIP.
+And **fail loud, not silent**: the coder stops on a missing or ambiguous spec instead of guessing, the tester reports failures verbatim without patching over them, and the verdict is mechanical: any FAIL or NOT TESTED criterion means it cannot be SHIP.
 
 ### Credit
 
 **Author**
-- Redho Ramadhani — [linkedin.com/in/redhoramadhanihamid](https://id.linkedin.com/in/redhoramadhanihamid) · [github.com/redhoram](https://github.com/redhoram)
+- Redho Ramadhani: [linkedin.com/in/redhoramadhanihamid](https://id.linkedin.com/in/redhoramadhanihamid) · [github.com/redhoram](https://github.com/redhoram)
 
 Built with [Claude Code](https://claude.com/claude-code).

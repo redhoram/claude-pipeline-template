@@ -1,19 +1,19 @@
 ---
 name: testing-discipline
-description: Use when verifying a feature against its success criteria — the Tester's method. Evidence-gated claims (no PASS without fresh command output), edge-case hunting, async/flaky test hygiene, and how to spot a lying green test suite.
+description: Use when verifying a feature against its success criteria, the Tester's method. Evidence-gated claims (no PASS without fresh command output), edge-case hunting, async/flaky test hygiene, and how to spot a lying green test suite.
 ---
 
 # Testing Discipline
 
 The Iron Law: **NO CLAIM WITHOUT FRESH EVIDENCE.** "Should work", "looks correct",
 "probably passes" do not exist in a test report. Either you ran it and read the
-output, or the criterion is NOT TESTED — and saying so honestly is a passing grade
+output, or the criterion is NOT TESTED: and saying so honestly is a passing grade
 for the Tester, while a bluffed PASS is the one unforgivable failure.
 
 ## 1. The evidence gate (before writing PASS on anything)
 
 1. **Identify** the exact command or action that proves the claim.
-2. **Run** it fresh — not "it passed earlier", not a cached result.
+2. **Run** it fresh: not "it passed earlier", not a cached result.
 3. **Read** the full output and exit code, not just the last line.
 4. **Compare**: does the output actually prove THIS criterion, or something adjacent?
 5. Only then write the verdict, quoting the decisive line.
@@ -25,11 +25,11 @@ for the Tester, while a bluffed PASS is the one unforgivable failure.
 | Lint clean | Linter output: 0 errors |
 | Endpoint works | Actual request sent + status/body observed (curl, test, or driven UI) |
 | Bug fixed | The ORIGINAL failing case, re-run, now passing |
-| UI renders | Page actually loaded/driven — reading the JSX is NOT evidence |
+| UI renders | Page actually loaded/driven: reading the JSX is NOT evidence |
 
 ## 2. Edge-case hunt (run after the happy path)
 
-The spec lists edge cases — verify those first, then probe these standard traps
+The spec lists edge cases: verify those first, then probe these standard traps
 for every input surface the feature added:
 
 - **Empty & missing**: `""`, `null`/`undefined`, empty array, missing field, no rows.
@@ -37,9 +37,9 @@ for every input surface the feature added:
 - **Oversized**: very long strings, huge numbers, big file, 1000-row list.
 - **Wrong type/shape**: string where number expected, malformed JSON, invalid enum.
 - **Hostile**: `'; DROP TABLE--`, `<script>alert(1)</script>`, `../../etc/passwd`
-  in any text field — expect escaping/rejection, not execution (see `secure-coding`).
+  in any text field: expect escaping/rejection, not execution (see `secure-coding`).
 - **Duplicate & repeat**: same request twice (double-submit), unique-constraint hits.
-- **Unauthorized**: the same actions logged out, and as a DIFFERENT user — foreign
+- **Unauthorized**: the same actions logged out, and as a DIFFERENT user; foreign
   IDs must yield 403/404, never data.
 - **Real-world text**: unicode, emoji, `O'Brien`, leading/trailing whitespace.
 - **Numbers**: division by zero, NaN, negative where only positive makes sense,
@@ -91,18 +91,18 @@ async function waitFor<T>(cond: () => T | false | null | undefined,
 ```
 
 - Every wait gets a timeout AND a named description, so a hang fails with a reason.
-- A test that passes on retry is a FAIL with extra steps — report the flake, don't
+- A test that passes on retry is a FAIL with extra steps: report the flake, don't
   re-run until green and call it PASS.
-- Fixed delays are legitimate ONLY when timing IS the feature (debounce, throttle) —
+- Fixed delays are legitimate ONLY when timing IS the feature (debounce, throttle),
   and then the test says so.
 
-## 4. Reading the Coder's tests — green can lie
+## 4. Reading the Coder's tests: green can lie
 
 Before trusting a passing suite, spot-check for these anti-patterns:
 
 - **Mock-assertions**: the test verifies a mock exists/was called, but never the
   real behavior (`expect(mockFn).toHaveBeenCalled()` as the ONLY assertion).
-- **Hollow mocks**: mocked responses missing fields the real API returns — the
+- **Hollow mocks**: mocked responses missing fields the real API returns, so the
   code under test never sees realistic data.
 - **Tautologies**: asserting a constant equals itself, snapshot-everything tests,
   `expect(true).toBe(true)` padding.
@@ -111,7 +111,7 @@ Before trusting a passing suite, spot-check for these anti-patterns:
 - **Deleted teeth**: assertions commented out or loosened (`toBeGreaterThan(0)`
   where an exact value was checkable).
 
-A green suite with these patterns proves nothing — note it in the report for the
+A green suite with these patterns proves nothing: note it in the report for the
 Reviewer; do NOT count it as evidence.
 
 ## 5. UI verification (features with a UI surface)
@@ -121,7 +121,7 @@ Reviewer; do NOT count it as evidence.
   load the page, perform the user action, observe the result.
 - No driving tool available → the flow goes under **Not tested** with the reason.
   Reading component code and declaring it works is forbidden (§1 table, last row).
-- While driving, also watch the console for errors — a rendered page with a red
+- While driving, also watch the console for errors: a rendered page with a red
   console is a finding, not a pass.
 
 ## Done check
