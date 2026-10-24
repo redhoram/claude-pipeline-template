@@ -20,8 +20,12 @@ Complex features need planning, implementation, testing, and review kept clearly
 
 - **`/ship [feature description]`**: runs the pipeline end-to-end — planner → designer → coder → tester → reviewer. The reviewer gives the final verdict (SHIP / NEEDS WORK / BLOCK); on SHIP, an optional **deployer** stage prepares the change for production (env-var inventory, infra config, deploy report).
 - **Open-questions gate**: if the planner's spec has unresolved open questions, the pipeline stops and asks you before designer/coder ever runs — no stage inherits a guess.
-- **Model tiering**: planner & reviewer run on `opus` (the leverage is in planning and judgment), coder, tester & deployer run on `sonnet` (cheap execution against a spec that's already unambiguous).
-- For small fixes/tweaks: `/ship` isn't required — just ask Claude Code directly.
+- **`/fix [change request]`**: the lighter path for revising a feature that already exists (rename, copy change, layout tweak, bug fix). The main session writes a short spec, then coder → tester → reviewer run. Revisions still leave a spec, a test report, and a verdict behind instead of slipping through as untracked edits.
+- **Model tiering**: planner, designer & reviewer run on `opus` (the leverage is in planning and judgment), coder, tester & deployer run on `sonnet` (cheap execution against a spec that's already unambiguous). Override any agent per project in the `Model override` table of `CLAUDE.md`, without editing the agent file.
+- **Visual check**: on any UI change the tester renders each touched screen at the widths in `CLAUDE.md`, looks at the screenshots, and reports what's broken even if no criterion mentions it. Severity 3+ blocks SHIP.
+- **Audit trail**: each run moves the previous `.pipeline/` artifacts to `.pipeline/archive/<timestamp>/` instead of deleting them.
+- **Commit on SHIP**: the pipeline offers to commit only the files in the changelog, staged by explicit path. It never pushes without your confirmation.
+- For one-line tweaks: neither command is required — just ask Claude Code directly.
 
 ### Difference from `_landing-template`
 
@@ -30,16 +34,16 @@ Complex features need planning, implementation, testing, and review kept clearly
 | Mode | Batch, doc-driven, fire-and-forget | Visual loop + interactive |
 | Agents | planner → designer → coder → tester → reviewer (→ deployer after SHIP) | writer → designer → builder → qa |
 | Final gate | Reviewer (SHIP/BLOCK, security-focused) | QA (punch-list, UI/UX-focused) |
-| Command | `/ship` | `/craft` (0→1) + `/polish` (1→great) |
+| Command | `/ship` (new feature) + `/fix` (revision) | `/craft` (0→1) + `/polish` (1→great) |
 | Verification | build/lint/test + scenarios | live preview: render, responsive, console |
 
 ### Contents
 
-- `CLAUDE.md` — project instructions: stack, conventions, pipeline flow. **Fill in the placeholders first.**
+- `CLAUDE.md` — project instructions: stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
-- `.claude/commands/` — `ship`
+- `.claude/commands/` — `ship`, `fix`
 - `.claude/skills/` — 6 bundled skills the agents enforce (matrix below)
-- `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`)
+- `.pipeline/` — handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
 
@@ -64,7 +68,7 @@ Worth knowing, deliberately **not** bundled: [`differential-review`](https://git
 ### Start a new project
 
 1. Copy `_pipeline-template` → rename the folder
-2. Fill in `CLAUDE.md` (replace all placeholders: stack, conventions, project rules)
+2. Fill in `CLAUDE.md` (replace all placeholders: stack, hard constraints, verification commands, deployment target, conventions; set Deployment Target to "none" if the deliverable is handed over manually)
 3. Scaffold your stack
 4. Fresh git history: open Claude Code in the folder. On the first session it detects the copied template `.git` and resets it automatically (or do it yourself: delete the hidden `.git`, then `git init`). Plain `git init` alone does NOT remove the template's history/remote.
 5. Open Claude Code in the folder → run `/ship [feature description]`

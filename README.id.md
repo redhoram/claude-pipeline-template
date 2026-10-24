@@ -20,8 +20,12 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 
 - **`/ship [deskripsi fitur]`**: jalanin pipeline end-to-end — planner → designer → coder → tester → reviewer. Reviewer kasih verdict akhir (SHIP / NEEDS WORK / BLOCK); kalau SHIP, tahap **deployer** opsional nyiapin perubahan buat produksi (inventaris env var, infra config, deploy report).
 - **Open-questions gate**: kalau spec dari planner masih ada open question, pipeline berhenti dan nanya kamu dulu sebelum designer/coder jalan — nggak ada tahap yang mewarisi tebakan.
-- **Model tiering**: planner & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu).
-- Untuk fix kecil/tweak: nggak wajib `/ship` — langsung minta Claude Code biasa.
+- **`/fix [permintaan perubahan]`**: jalur ringan buat merevisi fitur yang udah ada (ganti nama, ubah teks, rapikan layout, perbaiki bug). Sesi utama nulis spec singkat, lalu coder → tester → reviewer jalan. Revisi tetap ninggalin spec, test report, dan verdict, bukan lolos sebagai edit tanpa jejak.
+- **Model tiering**: planner, designer & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu). Model tiap agent bisa diganti per project lewat tabel `Model override` di `CLAUDE.md`, tanpa ngedit file agent.
+- **Cek visual**: tiap perubahan UI, tester merender layar yang kena di lebar yang tertulis di `CLAUDE.md`, ngeliat screenshot-nya, dan ngelaporin yang rusak walaupun nggak ada di kriteria. Severity 3 ke atas menahan SHIP.
+- **Jejak audit**: tiap run mindahin artefak `.pipeline/` sebelumnya ke `.pipeline/archive/<timestamp>/`, bukan ngehapus.
+- **Commit saat SHIP**: pipeline nawarin commit cuma untuk file di changelog, di-stage per path. Nggak pernah push tanpa konfirmasimu.
+- Untuk tweak satu baris: nggak wajib pakai command apa pun — langsung minta Claude Code biasa.
 
 ### Beda dari `_landing-template`
 
@@ -30,16 +34,16 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 | Mode | Batch, doc-driven, fire-and-forget | Loop visual + interaktif |
 | Agent | planner → designer → coder → tester → reviewer (→ deployer setelah SHIP) | writer → designer → builder → qa |
 | Gate akhir | Reviewer (SHIP/BLOCK, fokus keamanan) | QA (punch-list, fokus UI/UX) |
-| Command | `/ship` | `/craft` (0→1) + `/polish` (1→bagus) |
+| Command | `/ship` (fitur baru) + `/fix` (revisi) | `/craft` (0→1) + `/polish` (1→bagus) |
 | Verifikasi | build/lint/test + skenario | live preview: render, responsif, console |
 
 ### Isi
 
-- `CLAUDE.md` — instruksi project: stack, konvensi, alur pipeline. **Isi placeholder-nya dulu.**
+- `CLAUDE.md` — instruksi project: stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
 - `.claude/agents/` — `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
-- `.claude/commands/` — `ship`
+- `.claude/commands/` — `ship`, `fix`
 - `.claude/skills/` — 6 skill bawaan yang ditegakkan para agent (matriks di bawah)
-- `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`)
+- `.pipeline/` — workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`), dengan run lama di `.pipeline/archive/`
 
 ### Matriks skill
 
@@ -64,7 +68,7 @@ Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.
 ### Bikin project baru
 
 1. Copy `_pipeline-template` → rename folder
-2. Isi `CLAUDE.md` (ganti semua placeholder: stack, konvensi, aturan project)
+2. Isi `CLAUDE.md` (ganti semua placeholder: stack, batasan keras, perintah verifikasi, target deployment, konvensi; isi Deployment Target dengan "none" kalau hasil akhirnya diserahkan manual)
 3. Scaffold stack-mu
 4. Git history baru: buka Claude Code di folder itu. Di sesi pertama dia deteksi `.git` bawaan template dan reset otomatis (atau manual: hapus folder tersembunyi `.git`, lalu `git init`). `git init` doang TIDAK menghapus history/remote template.
 5. Buka Claude Code di folder itu → jalankan `/ship [deskripsi fitur]`

@@ -43,6 +43,7 @@ Thumbs.db
 # Testing / coverage
 /coverage
 
-# Pipeline scratchpads (regenerated on each /ship).
-# Remove the line below if you want to keep spec/changelog/verdict as an audit trail.
+# Pipeline scratchpads (regenerated on each /ship or /fix; old runs move to .pipeline/archive/).
+# Remove the two lines below if you want to commit spec/changelog/verdict and their archive as an audit trail.
 .pipeline/*.md
+.pipeline/archive/
