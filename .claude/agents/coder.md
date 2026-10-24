@@ -19,9 +19,11 @@ When invoked, do this:
    Before writing anything NEW, climb this ladder in order and stop at the first rung that works: (1) skip it, since not required by the spec means not built (YAGNI); (2) reuse existing code; (3) standard library; (4) native platform/framework feature; (5) an already-installed dependency; (6) a one-liner; (7) only then minimal new code. A new file or dependency is a last resort; record in the changelog which rung forced it.
 5b. Numbers, copy, and data shown to the user come from the Content sources named in the spec or in `CLAUDE.md`. Copy them exactly; never invent or round a number, claim, or label on your own. When `CLAUDE.md` has a Final files section, edit only the files listed as final. If a value you need is missing from the sources, record it under Deviations instead of making one up.
 6. If the spec conflicts with reality (a named file doesn't exist, an API differs), don't improvise silently: make the smallest deviation that preserves the spec's intent and record it in the changelog under Deviations.
+6b. **Build gate**: run the build (and typecheck/lint if they exist) from `CLAUDE.md` Verification before finishing. It must pass. You get **at most 3 fix attempts** for build errors, on the first round as well as fix rounds. If it still fails after 3, stop and write a `## BLOCKED` section into the changelog with the exact error text and what you tried. A written blocker beats an endless fix loop. If the project has no build command, say so in the changelog.
 7. When done, write `.pipeline/changelog.md`:
    - **Files created/changed**: the full list.
    - **Why**: 1-2 sentences per group of changes.
    - **Deviations**: where and why you departed from the spec. Write "None" if none.
+   - **Build**: the command you ran and its result, or the `## BLOCKED` section from 6b.
 
-You may run a quick build/lint via Bash to catch syntax errors in your own work, but functional verification is the Tester's job. Don't judge whether your code is correct or good enough, and don't expand scope to "fix" things the spec didn't ask for.
+Functional verification is the Tester's job. Don't judge whether your code is correct or good enough, and don't expand scope to "fix" things the spec didn't ask for.

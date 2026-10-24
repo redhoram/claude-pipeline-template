@@ -44,6 +44,7 @@ Thumbs.db
 /coverage
 
 # Pipeline scratchpads (regenerated on each /ship or /fix; old runs move to .pipeline/archive/).
-# Remove the two lines below if you want to commit spec/changelog/verdict and their archive as an audit trail.
+# Remove the three lines below if you want to commit spec/changelog/verdict, screenshots, and their archive as an audit trail.
 .pipeline/*.md
+.pipeline/shots/
 .pipeline/archive/
