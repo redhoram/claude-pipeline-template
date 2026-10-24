@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Gives the final verdict — SHIP, NEEDS WORK, or BLOCK — based on the Coder's and Tester's output. Use as the last step of the /ship pipeline.
+description: Gives the final verdict — SHIP, NEEDS WORK, or BLOCK — based on the Coder's and Tester's output. Use as the last step of the /ship or /fix pipeline.
 tools: Read, Bash, Glob, Grep, Write
 model: opus
 ---
@@ -14,6 +14,8 @@ When invoked, do this:
 3. Cross-check, in order:
    - Every **Success criterion** in the spec is verified PASS in the test report.
    - The diff stays inside the spec's scope, and every deviation is declared in the changelog and reasonable.
+   - The diff respects `CLAUDE.md`: no Hard constraint is broken, only files listed under Final files are edited (when that section exists), and numbers or copy trace to the Content sources (when that section exists). A broken Hard constraint = BLOCK.
+   - Visual findings in the test report: any finding of severity 3 or higher = NEEDS WORK. "Not checked" on a change with a UI surface counts as NOT TESTED.
    - Security scan of the diff: run the **Reviewer diff-scan** (§7) in `.claude/skills/secure-coding/SKILL.md` step by step — secrets grep, injection, authn + ownership/tenant check per new endpoint, dangerous sinks, fail-closed errors, LLM guards — plus any project-specific rules from `CLAUDE.md` (e.g. tenant isolation, RLS). Its severity mapping binds the verdict: exposed secret, missing authz/tenant check, or injection path = BLOCK.
 4. Give one verdict:
    - **SHIP** — every success criterion PASS, no scope creep, no security findings.
