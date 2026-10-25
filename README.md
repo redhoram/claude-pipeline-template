@@ -43,7 +43,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `CLAUDE.md`: project instructions covering stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
-- `.claude/skills/`: 9 bundled skills the agents enforce (matrix below)
+- `.claude/skills/`: 14 bundled skills the agents enforce (matrix below)
 - `.pipeline/`: handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
@@ -61,6 +61,11 @@ Each agent reads only the skills that belong to its stage: documented here so th
 | `api-contract-guardian` | planner + coder + reviewer (data crossing layers) | A Contract table in the spec (database, backend validation, frontend type, nullability), enum and naming sync, ISO dates, no float money, idempotent state-changing calls, backward-compatible changes |
 | `performance-profiler` | planner + coder + reviewer (lists, queries, exports) | Expected data scale stated in the spec, no N+1 or unbounded queries, pagination, cleaned-up listeners and bounded caches, streamed large files, virtualized long lists; every finding names the scale where it breaks |
 | `architecture-clean-code` | coder + reviewer | Layer separation, no dead code left by the diff, rule of three for duplication, no circular imports, size norms as signals. Judges only what the diff adds; hard constraints in `CLAUDE.md` always win |
+| `antislop` | designer + coder + tester (UI features) | Core filter adapted from anti-slop: a purpose test for every visual technique, 38 rules in three tiers, the Design Read with ENERGY/RHYTHM/MOTION dials, and a Delivery Gate report with evidence |
+| `antislop-ui` | designer + coder + tester | Generic AI UI patterns with tell, why, and fix, including app screens: default dashboard shell, stat cards with invented numbers, filler activity feeds, charts without a question, placeholder empty states |
+| `antislop-layoutmobile` | coder + tester | Reflow from phone to desktop: breakpoints, fluid scale, collapsing grids, overflow, tap targets, mobile navigation |
+| `antislop-human` | coder + tester | Contrast computed with `contrast-check.py`, keyboard and focus, color-only feedback, UI states, zoom |
+| `antislop-code` | coder + tester | Comment hygiene: no decorative banners, restated code, step narration, vague TODOs, or signature echoes; keeps comments that explain why. Changes comments only, never code |
 
 Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review; CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing; add per-project when browser e2e is actually needed).
 
@@ -87,5 +92,8 @@ And **fail loud, not silent**: the coder stops on a missing or ambiguous spec in
 
 **Author**
 - Redho Ramadhani: [linkedin.com/in/redhoramadhanihamid](https://id.linkedin.com/in/redhoramadhanihamid) · [github.com/redhoram](https://github.com/redhoram)
+
+**Included skills adapted from others**
+- `antislop` and its companion skills: adapted from [anti-slop](https://github.com/miqdadbadjuber/anti-slop) v3.2.23 by miqdadbadjuber, MIT License (`.claude/skills/antislop/LICENSE`). Changes: no install wizard or mode question, a fixed mode per agent, a theme toggle only when asked, and no em dash or emoji characters.
 
 Built with [Claude Code](https://claude.com/claude-code).
