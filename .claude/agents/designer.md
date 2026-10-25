@@ -25,7 +25,7 @@ Your job is NOT to write final code. Your job: turn `.pipeline/spec.md` into a p
    - **User & principles**: who + JTBD + context of use, then **Principles used**: each psychology principle mapped to where it's applied (per the `ux-research` skill).
    - **Design direction**: concept + energy level (e.g. "bold, editorial, confident") + 1 reference if helpful. Then the Design Read line and the dials, e.g. `Dial: ENERGY 2 / RHYTHM 3 / MOTION 1`.
    - **Design system**: palette + contrast rules, typography, spacing/radius/shadow, motion (150-300ms, transform/opacity), icons (lucide by default; one line on why the set fits this brand, per antislop R-04).
-   - **Section-by-section breakdown**: order, layout + breakpoints, concrete content (write the actual headline/copy/CTA), components, states (hover/focus/empty/loading), specific micro-interactions.
+   - **Section-by-section breakdown**: order, layout + breakpoints, concrete content (write the actual headline/copy/CTA), components, states (hover/focus/empty/loading), specific micro-interactions. Every piece of UI text in the spec is final copy: labels, feature descriptions, empty, loading, and error messages, onboarding, tooltips, and emails the feature sends. Run `.claude/skills/humanizer/SKILL.md` (embedded mode) over all of it and apply antislop R-15 (CTAs) and R-16 (buzzwords) before you write the spec.
    - **Assets**: icons (Lucide names), images/logo + how to process them.
    - **Quality budget**: a11y, responsive, performance, cleanliness (refer to `CLAUDE.md`).
    - **Reasons (antislop R-31)**: one line each for the palette, layout, typography, spacing, card use, icons, and illustrations. A decision you cannot justify in one line gets revisited.

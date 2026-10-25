@@ -120,7 +120,7 @@ The `/fix [change request]` command is the lighter path for revising a feature t
 Each run archives the previous `.pipeline/` artifacts (including screenshots in `.pipeline/shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them. The coder must pass the build within 3 fix attempts or write `## BLOCKED` into the changelog, which stops the chain.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.
 
-Fourteen bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
+Fifteen bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
 the **planner** consults `relational-mastery` when the feature touches persisted data (normalization, FK lifecycles, index strategy for the spec's Data model section),
 `api-contract-guardian` when data crosses layers (a Contract table for database, API, and UI), and `performance-profiler` when the feature reads lists or grows with usage (expected data scale);
 the **coder** follows `architecture-clean-code` while writing (layers, no dead code, no third copy) and the **reviewer** checks the diff against it, plus the contract and performance checks when they apply;
@@ -131,5 +131,6 @@ the **coder** follows `systematic-debugging` on NEEDS WORK fix rounds (root caus
 the **tester** follows `testing-discipline` (no PASS without fresh evidence);
 the **deployer** applies `secure-coding` §4 to env-var and infra config it prepares post-SHIP;
 the **designer**, **coder**, and **tester** share five `antislop` skills adapted from [anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT): the core filter (Design Read, dials, Delivery Gate), `antislop-ui`, `antislop-layoutmobile`, `antislop-human` (with a contrast script), and `antislop-code` for comments. The designer and coder apply them while working; the tester audits with them.
+`humanizer` keeps UI text from reading as AI-written: the **designer** runs it over every piece of copy in the spec, the **coder** follows it for any text it writes itself, and the **tester** reads new text against it.
 
 For one-line tasks, neither command is required; just ask Claude Code directly. Anything a reviewer should see goes through `/fix` at minimum.

@@ -43,7 +43,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `CLAUDE.md`: instruksi project berisi stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
-- `.claude/skills/`: 14 skill bawaan yang ditegakkan para agent (matriks di bawah)
+- `.claude/skills/`: 15 skill bawaan yang ditegakkan para agent (matriks di bawah)
 - `.pipeline/`: workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), dengan run lama di `.pipeline/archive/`
 
 ### Matriks skill
@@ -66,6 +66,7 @@ Tiap agent cuma baca skill milik tahapnya: didokumentasikan di sini biar pemetaa
 | `antislop-layoutmobile` | coder + tester | Tata letak yang menyesuaikan dari ponsel ke desktop: breakpoint, skala fluid, grid yang menumpuk, overflow, target sentuh, navigasi mobile |
 | `antislop-human` | coder + tester | Kontras yang dihitung dengan `contrast-check.py`, keyboard dan fokus, umpan balik yang hanya mengandalkan warna, state UI, zoom |
 | `antislop-code` | coder + tester | Kebersihan komentar: tanpa banner dekoratif, komentar yang mengulang kode, narasi langkah, TODO kabur, atau gema signature; komentar yang menjelaskan alasan tetap dipertahankan. Hanya mengubah komentar, tidak menyentuh kode |
+| `humanizer` | designer + coder + tester | Teks UI yang tidak terdengar ditulis AI: deskripsi fitur, empty state dan pesan error, onboarding, tooltip. Designer menjalankannya pada copy di spec, coder pada teks yang ia tulis sendiri, tester membaca teks baru dengan acuan ini |
 
 Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.com/trailofbits/skills) dari Trail of Bits (security diff review lebih dalam; lisensi CC BY-SA, install terpisah, jangan di-vendor ke repo MIT) dan [`webapp-testing`](https://github.com/anthropics/skills) dari Anthropic (UI testing berbasis Playwright; tambahkan per-project saat browser e2e beneran dibutuhkan).
 
@@ -95,5 +96,6 @@ Dan **gagal keras, bukan diam-diam**: coder berhenti kalau spec hilang/ambigu da
 
 **Skill bawaan hasil adaptasi**
 - `antislop` dan skill pendampingnya: diadaptasi dari [anti-slop](https://github.com/miqdadbadjuber/anti-slop) v3.2.23 karya miqdadbadjuber, Lisensi MIT (`.claude/skills/antislop/LICENSE`). Perubahan: tanpa wizard instalasi dan pertanyaan mode, mode tetap per agent, toggle tema hanya kalau diminta, dan tanpa karakter em dash atau emoji.
+- `humanizer` v3.1.0 karya Siqi Chen, Lisensi MIT (`.claude/skills/humanizer/LICENSE`), disertakan tanpa perubahan; contoh di dalamnya tetap memuat dash dan emoji yang justru diajarkan untuk dibuang.
 
 Dibangun dengan [Claude Code](https://claude.com/claude-code).
