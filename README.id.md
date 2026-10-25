@@ -43,7 +43,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 - `CLAUDE.md`: instruksi project berisi stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
-- `.claude/skills/`: 9 skill bawaan yang ditegakkan para agent (matriks di bawah)
+- `.claude/skills/`: 14 skill bawaan yang ditegakkan para agent (matriks di bawah)
 - `.pipeline/`: workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), dengan run lama di `.pipeline/archive/`
 
 ### Matriks skill
@@ -61,6 +61,11 @@ Tiap agent cuma baca skill milik tahapnya: didokumentasikan di sini biar pemetaa
 | `api-contract-guardian` | planner + coder + reviewer (data lintas lapisan) | Tabel Contract di spec (database, validasi backend, tipe frontend, nullability), sinkron enum dan penamaan, tanggal ISO, uang bukan float, panggilan pengubah data yang idempotent, perubahan yang backward-compatible |
 | `performance-profiler` | planner + coder + reviewer (list, query, ekspor) | Skala data tertulis di spec, nggak ada N+1 atau query tanpa batas, paginasi, listener dibersihkan dan cache dibatasi, file besar di-stream, list panjang di-virtualisasi; tiap temuan nyebut skala tempat dia rusak |
 | `architecture-clean-code` | coder + reviewer | Pemisahan lapisan, nggak ada dead code sisa diff, aturan tiga kali untuk duplikasi, nggak ada import melingkar, ukuran file sebagai sinyal. Cuma menilai yang ditambah diff; batasan keras di `CLAUDE.md` selalu menang |
+| `antislop` | designer + coder + tester (fitur UI) | Filter inti hasil adaptasi anti-slop: uji tujuan untuk tiap teknik visual, 38 aturan dalam tiga tingkat, Design Read dengan dial ENERGY/RHYTHM/MOTION, dan laporan Delivery Gate beserta buktinya |
+| `antislop-ui` | designer + coder + tester | Pola UI khas AI lengkap dengan ciri, alasan, dan perbaikannya, termasuk layar aplikasi: kerangka dashboard default, kartu statistik berangka karangan, feed aktivitas pengisi, grafik tanpa pertanyaan, empty state seadanya |
+| `antislop-layoutmobile` | coder + tester | Tata letak yang menyesuaikan dari ponsel ke desktop: breakpoint, skala fluid, grid yang menumpuk, overflow, target sentuh, navigasi mobile |
+| `antislop-human` | coder + tester | Kontras yang dihitung dengan `contrast-check.py`, keyboard dan fokus, umpan balik yang hanya mengandalkan warna, state UI, zoom |
+| `antislop-code` | coder + tester | Kebersihan komentar: tanpa banner dekoratif, komentar yang mengulang kode, narasi langkah, TODO kabur, atau gema signature; komentar yang menjelaskan alasan tetap dipertahankan. Hanya mengubah komentar, tidak menyentuh kode |
 
 Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.com/trailofbits/skills) dari Trail of Bits (security diff review lebih dalam; lisensi CC BY-SA, install terpisah, jangan di-vendor ke repo MIT) dan [`webapp-testing`](https://github.com/anthropics/skills) dari Anthropic (UI testing berbasis Playwright; tambahkan per-project saat browser e2e beneran dibutuhkan).
 
@@ -87,5 +92,8 @@ Dan **gagal keras, bukan diam-diam**: coder berhenti kalau spec hilang/ambigu da
 
 **Author**
 - Redho Ramadhani: [linkedin.com/in/redhoramadhanihamid](https://id.linkedin.com/in/redhoramadhanihamid) · [github.com/redhoram](https://github.com/redhoram)
+
+**Skill bawaan hasil adaptasi**
+- `antislop` dan skill pendampingnya: diadaptasi dari [anti-slop](https://github.com/miqdadbadjuber/anti-slop) v3.2.23 karya miqdadbadjuber, Lisensi MIT (`.claude/skills/antislop/LICENSE`). Perubahan: tanpa wizard instalasi dan pertanyaan mode, mode tetap per agent, toggle tema hanya kalau diminta, dan tanpa karakter em dash atau emoji.
 
 Dibangun dengan [Claude Code](https://claude.com/claude-code).
