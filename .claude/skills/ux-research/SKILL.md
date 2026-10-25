@@ -70,7 +70,7 @@ most often fall short of the design:
   verb-first and specific ("Simpan perubahan", not "Submit"/"OK"). Empty states pair a
   sentence with the next step. Indonesian copy reads as written Indonesian, not a
   literal translation, and the tone stays consistent across screens. For long-form
-  text, run the `humanizer` skill if it is installed.
+  text, run the bundled `humanizer` skill.
 
 ## 4. Ethics hard-lines (violating any = design.md is rejected)
 

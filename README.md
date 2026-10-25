@@ -43,7 +43,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 - `CLAUDE.md`: project instructions covering stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
 - `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
-- `.claude/skills/`: 14 bundled skills the agents enforce (matrix below)
+- `.claude/skills/`: 15 bundled skills the agents enforce (matrix below)
 - `.pipeline/`: handoff workspace (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), with past runs in `.pipeline/archive/`
 
 ### Skill matrix
@@ -66,6 +66,7 @@ Each agent reads only the skills that belong to its stage: documented here so th
 | `antislop-layoutmobile` | coder + tester | Reflow from phone to desktop: breakpoints, fluid scale, collapsing grids, overflow, tap targets, mobile navigation |
 | `antislop-human` | coder + tester | Contrast computed with `contrast-check.py`, keyboard and focus, color-only feedback, UI states, zoom |
 | `antislop-code` | coder + tester | Comment hygiene: no decorative banners, restated code, step narration, vague TODOs, or signature echoes; keeps comments that explain why. Changes comments only, never code |
+| `humanizer` | designer + coder + tester | UI text that does not read as AI-written: feature descriptions, empty and error states, onboarding, tooltips. The designer runs it on the spec's copy, the coder on any text it writes, the tester reads new text against it |
 
 Worth knowing, deliberately **not** bundled: [`differential-review`](https://github.com/trailofbits/skills) by Trail of Bits (deeper security diff review; CC BY-SA licensed, install separately rather than vendoring into an MIT repo) and [`webapp-testing`](https://github.com/anthropics/skills) by Anthropic (Playwright-driven UI testing; add per-project when browser e2e is actually needed).
 
@@ -95,5 +96,6 @@ And **fail loud, not silent**: the coder stops on a missing or ambiguous spec in
 
 **Included skills adapted from others**
 - `antislop` and its companion skills: adapted from [anti-slop](https://github.com/miqdadbadjuber/anti-slop) v3.2.23 by miqdadbadjuber, MIT License (`.claude/skills/antislop/LICENSE`). Changes: no install wizard or mode question, a fixed mode per agent, a theme toggle only when asked, and no em dash or emoji characters.
+- `humanizer` v3.1.0 by Siqi Chen, MIT License (`.claude/skills/humanizer/LICENSE`), included unchanged; its examples keep the dashes and emoji it teaches you to remove.
 
 Built with [Claude Code](https://claude.com/claude-code).
