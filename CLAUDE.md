@@ -10,6 +10,8 @@ Real risk: committing here could push unrelated project code to the
 template's public repo. The user copies this folder on purpose to start new
 projects; this check exists so they can do that with zero manual steps.
 
+**Main session only.** Subagents skip this whole section: never move or re-init `.git` from a subagent.
+
 Before any other work, run `git remote -v` and look at the current folder name.
 
 1. **Original template: skip, touch nothing.** Folder name is
