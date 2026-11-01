@@ -1,6 +1,6 @@
 ---
 name: architecture-clean-code
-description: Use when writing or reviewing code structure. Keeps layers separated, removes dead code the diff leaves behind, catches duplicated logic and circular imports, and keeps files within the project's size norm. The Coder applies it while writing; the Reviewer checks the diff. Hard constraints in CLAUDE.md always win.
+description: Use when writing or reviewing code structure. Keeps layers separated, removes dead code the diff leaves behind, catches duplicated logic and circular imports, and keeps files within the project's size norm. The Coder applies it while writing; the Gatekeeper checks the diff. Hard constraints in CLAUDE.md always win.
 ---
 
 # Architecture and Clean Code
@@ -49,7 +49,7 @@ Treat a file growing past roughly 300 lines, or a function past roughly 50, as a
 to split by responsibility. These are defaults: `CLAUDE.md` can set others, and a hard
 constraint can override them entirely.
 
-## 6. Reviewer check
+## 6. Gatekeeper check
 
 Findings count only when the diff introduced or worsened them; existing debt is noted
 for the user, never used to expand scope. Severity: layer violations, dead code left by

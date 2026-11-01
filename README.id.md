@@ -18,10 +18,10 @@ Template framework untuk **aplikasi dengan CRUD / logika kompleks**: fitur berla
 
 Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpisah jelas, biar tiap tahap bisa diaudit dan nggak ada yang kelewat. Alurnya doc-driven: tiap subagent nulis artefak ke `.pipeline/`, lalu di-handoff ke tahap berikutnya.
 
-- **`/ship [deskripsi fitur]`**: jalanin pipeline end-to-end (planner → designer → coder → tester → reviewer). Reviewer kasih verdict akhir (SHIP / NEEDS WORK / BLOCK); kalau SHIP, tahap **deployer** opsional nyiapin perubahan buat produksi (inventaris env var, infra config, deploy report).
-- **Open-questions gate**: kalau spec dari planner masih ada open question, pipeline berhenti dan nanya kamu dulu sebelum designer/coder jalan, jadi nggak ada tahap yang mewarisi tebakan.
-- **`/fix [permintaan perubahan]`**: jalur ringan buat merevisi fitur yang udah ada (ganti nama, ubah teks, rapikan layout, perbaiki bug). Sesi utama nulis spec singkat, lalu coder → tester → reviewer jalan. Revisi tetap ninggalin spec, test report, dan verdict, bukan lolos sebagai edit tanpa jejak.
-- **Model tiering**: planner, designer & reviewer jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu). Model tiap agent bisa diganti per project lewat tabel `Model override` di `CLAUDE.md`, tanpa ngedit file agent.
+- **`/ship [deskripsi fitur]`**: jalanin pipeline end-to-end (planner → drafter → coder → tester → gatekeeper). Gatekeeper kasih verdict akhir (SHIP / NEEDS WORK / BLOCK); kalau SHIP, tahap **deployer** opsional nyiapin perubahan buat produksi (inventaris env var, infra config, deploy report).
+- **Open-questions gate**: kalau spec dari planner masih ada open question, pipeline berhenti dan nanya kamu dulu sebelum drafter/coder jalan, jadi nggak ada tahap yang mewarisi tebakan.
+- **`/fix [permintaan perubahan]`**: jalur ringan buat merevisi fitur yang udah ada (ganti nama, ubah teks, rapikan layout, perbaiki bug). Sesi utama nulis spec singkat, lalu coder → tester → gatekeeper jalan. Revisi tetap ninggalin spec, test report, dan verdict, bukan lolos sebagai edit tanpa jejak.
+- **Model tiering**: planner, drafter & gatekeeper jalan di `opus` (leverage-nya ada di perencanaan dan judgment), coder, tester & deployer jalan di `sonnet` (eksekusi murah terhadap spec yang udah nggak ambigu). Model tiap agent bisa diganti per project lewat tabel `Model override` di `CLAUDE.md`, tanpa ngedit file agent.
 - **Cek visual**: tiap perubahan UI, tester merender layar yang kena di lebar yang tertulis di `CLAUDE.md`, ngeliat screenshot-nya, dan ngelaporin yang rusak walaupun nggak ada di kriteria. Severity 3 ke atas menahan SHIP.
 - **Jejak audit**: tiap run mindahin artefak `.pipeline/` sebelumnya (termasuk `shots/`) ke `.pipeline/archive/<timestamp>/`, bukan ngehapus.
 - **Gerbang build dan stop fatal**: coder wajib lolos build dengan maksimal 3 percobaan perbaikan; kalau gagal, dia nulis `## BLOCKED` di changelog. `/ship` dan `/fix` ngecek keluaran tiap tahap dan menghentikan rantai kalau file hilang, pertanyaan belum terjawab, atau ada bagian `BLOCKED`, bukan maksa lanjut.
@@ -33,15 +33,15 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 | | `_pipeline-template` (CRUD kompleks) | `_landing-template` (landing & app sederhana) |
 |---|---|---|
 | Mode | Batch, doc-driven, fire-and-forget | Loop visual + interaktif |
-| Agent | planner → designer → coder → tester → reviewer (→ deployer setelah SHIP) | writer → designer → builder → qa |
-| Gate akhir | Reviewer (SHIP/BLOCK, fokus keamanan) | QA (punch-list, fokus UI/UX) |
+| Agent | planner → drafter → coder → tester → gatekeeper (→ deployer setelah SHIP) | curator → optimizer → copywriter → composer → developer → qa → inspector |
+| Gate akhir | Gatekeeper (SHIP/BLOCK, fokus keamanan) | Inspector (verdict atas brief dan taste), setelah punch-list QA |
 | Command | `/ship` (fitur baru) + `/fix` (revisi) | `/craft` (0→1) + `/polish` (1→bagus) |
 | Verifikasi | build/lint/test + skenario | live preview: render, responsif, console |
 
 ### Isi
 
 - `CLAUDE.md`: instruksi project berisi stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
-- `.claude/agents/`: `planner`, `designer`, `coder`, `tester`, `reviewer`, `deployer`
+- `.claude/agents/`: `planner`, `drafter`, `coder`, `tester`, `gatekeeper`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
 - `.claude/skills/`: 15 skill bawaan yang ditegakkan para agent (matriks di bawah)
 - `.pipeline/`: workspace handoff (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), dengan run lama di `.pipeline/archive/`
@@ -53,20 +53,20 @@ Tiap agent cuma baca skill milik tahapnya: didokumentasikan di sini biar pemetaa
 | Skill | Dipakai oleh | Menegakkan |
 |---|---|---|
 | `relational-mastery` | planner (fitur berdata aja) | Normalisasi (3NF), lifecycle FK dengan ON DELETE/UPDATE eksplisit, justifikasi index per query, kolom ownership/tenant, skema siap-ORM di section Data model spec |
-| `premium-design` | designer | Disiplin palet, metrik tipografi, motion yang disengaja, intensitas marketing-vs-product |
-| `ux-research` | designer + tester | Landasan perilaku: user + JTBD dulu, 3-5 prinsip psikologi bernama per surface, checklist Nielsen/Krug saat mendesain, garis keras anti dark-pattern. Tester menjalankan diagnostik usability 10 pertanyaan (severity 0-4) pada UI yang di-drive |
-| `secure-coding` | coder + reviewer + deployer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; reviewer mengaudit daftar yang sama lewat diff-scan §7-nya; deployer menerapkan §4 ke persiapan env/infra pasca-SHIP |
+| `premium-design` | drafter | Disiplin palet, metrik tipografi, motion yang disengaja, intensitas marketing-vs-product |
+| `ux-research` | drafter + tester | Landasan perilaku: user + JTBD dulu, 3-5 prinsip psikologi bernama per surface, checklist Nielsen/Krug saat mendesain, garis keras anti dark-pattern. Tester menjalankan diagnostik usability 10 pertanyaan (severity 0-4) pada UI yang di-drive |
+| `secure-coding` | coder + gatekeeper + deployer | Satu bar keamanan bersama (turunan OWASP): injection, authz/ownership, secrets, error fail-closed, risiko LLM. Coder menerapkannya saat menulis; gatekeeper mengaudit daftar yang sama lewat diff-scan §7-nya; deployer menerapkan §4 ke persiapan env/infra pasca-SHIP |
 | `systematic-debugging` | coder (ronde fix) | Root cause dulu sebelum fix apa pun, satu fix per penyebab, aturan 3-strikes: berhenti dan lapor, bukan terus menebak |
 | `testing-discipline` | tester | Gerbang bukti (nggak ada PASS tanpa output segar), jebakan edge-case standar (termasuk angka dan waktu), berburu error yang ditelan diam-diam, regression radar ke pemakai kode yang diubah, higiene async/flaky, mendeteksi suite hijau yang bohong |
-| `api-contract-guardian` | planner + coder + reviewer (data lintas lapisan) | Tabel Contract di spec (database, validasi backend, tipe frontend, nullability), sinkron enum dan penamaan, tanggal ISO, uang bukan float, panggilan pengubah data yang idempotent, perubahan yang backward-compatible |
-| `performance-profiler` | planner + coder + reviewer (list, query, ekspor) | Skala data tertulis di spec, nggak ada N+1 atau query tanpa batas, paginasi, listener dibersihkan dan cache dibatasi, file besar di-stream, list panjang di-virtualisasi; tiap temuan nyebut skala tempat dia rusak |
-| `architecture-clean-code` | coder + reviewer | Pemisahan lapisan, nggak ada dead code sisa diff, aturan tiga kali untuk duplikasi, nggak ada import melingkar, ukuran file sebagai sinyal. Cuma menilai yang ditambah diff; batasan keras di `CLAUDE.md` selalu menang |
-| `antislop` | designer + coder + tester (fitur UI) | Filter inti hasil adaptasi anti-slop: uji tujuan untuk tiap teknik visual, 38 aturan dalam tiga tingkat, Design Read dengan dial ENERGY/RHYTHM/MOTION, dan laporan Delivery Gate beserta buktinya |
-| `antislop-ui` | designer + coder + tester | Pola UI khas AI lengkap dengan ciri, alasan, dan perbaikannya, termasuk layar aplikasi: kerangka dashboard default, kartu statistik berangka karangan, feed aktivitas pengisi, grafik tanpa pertanyaan, empty state seadanya |
+| `api-contract-guardian` | planner + coder + gatekeeper (data lintas lapisan) | Tabel Contract di spec (database, validasi backend, tipe frontend, nullability), sinkron enum dan penamaan, tanggal ISO, uang bukan float, panggilan pengubah data yang idempotent, perubahan yang backward-compatible |
+| `performance-profiler` | planner + coder + gatekeeper (list, query, ekspor) | Skala data tertulis di spec, nggak ada N+1 atau query tanpa batas, paginasi, listener dibersihkan dan cache dibatasi, file besar di-stream, list panjang di-virtualisasi; tiap temuan nyebut skala tempat dia rusak |
+| `architecture-clean-code` | coder + gatekeeper | Pemisahan lapisan, nggak ada dead code sisa diff, aturan tiga kali untuk duplikasi, nggak ada import melingkar, ukuran file sebagai sinyal. Cuma menilai yang ditambah diff; batasan keras di `CLAUDE.md` selalu menang |
+| `antislop` | drafter + coder + tester (fitur UI) | Filter inti hasil adaptasi anti-slop: uji tujuan untuk tiap teknik visual, 38 aturan dalam tiga tingkat, Design Read dengan dial ENERGY/RHYTHM/MOTION, dan laporan Delivery Gate beserta buktinya |
+| `antislop-ui` | drafter + coder + tester | Pola UI khas AI lengkap dengan ciri, alasan, dan perbaikannya, termasuk layar aplikasi: kerangka dashboard default, kartu statistik berangka karangan, feed aktivitas pengisi, grafik tanpa pertanyaan, empty state seadanya |
 | `antislop-layoutmobile` | coder + tester | Tata letak yang menyesuaikan dari ponsel ke desktop: breakpoint, skala fluid, grid yang menumpuk, overflow, target sentuh, navigasi mobile |
 | `antislop-human` | coder + tester | Kontras yang dihitung dengan `contrast-check.py`, keyboard dan fokus, umpan balik yang hanya mengandalkan warna, state UI, zoom |
 | `antislop-code` | coder + tester | Kebersihan komentar: tanpa banner dekoratif, komentar yang mengulang kode, narasi langkah, TODO kabur, atau gema signature; komentar yang menjelaskan alasan tetap dipertahankan. Hanya mengubah komentar, tidak menyentuh kode |
-| `humanizer` | designer + coder + tester | Teks UI yang tidak terdengar ditulis AI: deskripsi fitur, empty state dan pesan error, onboarding, tooltip. Designer menjalankannya pada copy di spec, coder pada teks yang ia tulis sendiri, tester membaca teks baru dengan acuan ini |
+| `humanizer` | drafter + coder + tester | Teks UI yang tidak terdengar ditulis AI: deskripsi fitur, empty state dan pesan error, onboarding, tooltip. Drafter menjalankannya pada copy di spec, coder pada teks yang ia tulis sendiri, tester membaca teks baru dengan acuan ini |
 
 Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.com/trailofbits/skills) dari Trail of Bits (security diff review lebih dalam; lisensi CC BY-SA, install terpisah, jangan di-vendor ke repo MIT) dan [`webapp-testing`](https://github.com/anthropics/skills) dari Anthropic (UI testing berbasis Playwright; tambahkan per-project saat browser e2e beneran dibutuhkan).
 
