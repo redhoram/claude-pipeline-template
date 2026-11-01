@@ -112,7 +112,7 @@ Before trusting a passing suite, spot-check for these anti-patterns:
   where an exact value was checkable).
 
 A green suite with these patterns proves nothing: note it in the report for the
-Reviewer; do NOT count it as evidence.
+Gatekeeper; do NOT count it as evidence.
 
 ## 5. UI verification (features with a UI surface)
 

@@ -1,6 +1,6 @@
 ---
 name: api-contract-guardian
-description: Use when a feature changes a database schema, an API request or response shape, an enum, nullability, or a form that posts to an endpoint. Keeps database, backend, and frontend in sync, makes state-changing calls idempotent, and keeps changes backward compatible. The Planner writes the contract into the spec; the Reviewer verifies it against the diff.
+description: Use when a feature changes a database schema, an API request or response shape, an enum, nullability, or a form that posts to an endpoint. Keeps database, backend, and frontend in sync, makes state-changing calls idempotent, and keeps changes backward compatible. The Planner writes the contract into the spec; the Gatekeeper verifies it against the diff.
 ---
 
 # API Contract Guardian
@@ -50,7 +50,7 @@ travels to the screen and back.
 - Status codes mean what they say: 200/201 success, 400 validation, 401 not logged in,
   403 not allowed, 404 not found, 409 conflict (unique violation or concurrent edit).
 
-## 5. Reviewer check
+## 5. Gatekeeper check
 
 Rebuild the contract table from the actual diff (migration, validation schema, frontend
 types) and compare it with the spec. Severity for the verdict:
@@ -67,7 +67,7 @@ types) and compare it with the spec. Severity for the verdict:
 - [ ] Names, nullability, enums, dates, and money follow §2
 - [ ] Retried state-changing calls can't run twice
 - [ ] Renames and removals update all consumers or have a deprecation step
-- [ ] Reviewer rebuilt the table from the diff, not from the changelog
+- [ ] Gatekeeper rebuilt the table from the diff, not from the changelog
 
 > Credits: distilled for this pipeline from a custom API-contract checklist by the
 > template author.

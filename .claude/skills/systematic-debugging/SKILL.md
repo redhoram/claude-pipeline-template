@@ -14,7 +14,7 @@ looks "obviously simple", and especially after a previous fix already failed.
 
 ## When this applies
 
-- The Reviewer returned **NEEDS WORK** and you are the Coder on a fix round.
+- The Gatekeeper returned **NEEDS WORK** and you are the Coder on a fix round.
 - Any test failure, build failure, or behavior that contradicts the spec.
 - NOT for writing new features: this is for making wrong things right.
 
@@ -59,7 +59,7 @@ After **3 failed fix attempts** on the same problem: STOP. The problem is almost
 certainly architectural, or the spec conflicts with reality. Do not attempt fix #4.
 In this pipeline that means: write what you tried and what you learned into
 `.pipeline/changelog.md` under **Deviations**, and report back as blocked: the
-Reviewer/user decides the next move. A documented stop beats a silent hack.
+Gatekeeper/user decides the next move. A documented stop beats a silent hack.
 
 ## Red flags: you are about to violate the Iron Law
 

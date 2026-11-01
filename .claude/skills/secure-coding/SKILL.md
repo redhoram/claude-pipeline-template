@@ -1,13 +1,13 @@
 ---
 name: secure-coding
-description: Use when writing or reviewing any code that touches user input, auth, data access, secrets, or AI/LLM calls. Security checklist for the Coder (while writing) and the Reviewer (while auditing the diff), injection, authz, secrets, fail-closed errors, and LLM-specific risks.
+description: Use when writing or reviewing any code that touches user input, auth, data access, secrets, or AI/LLM calls. Security checklist for the Coder (while writing) and the Gatekeeper (while auditing the diff), injection, authz, secrets, fail-closed errors, and LLM-specific risks.
 ---
 
 # Secure Coding
 
 Core belief: security is a **default posture, not a feature ticket**. The cheapest
 vulnerability is the one never written. The Coder applies this while writing;
-the Reviewer audits the diff against the same list: one source of truth, no drift.
+the Gatekeeper audits the diff against the same list: one source of truth, no drift.
 
 ## 0. Non-negotiables (apply to every change)
 
@@ -92,7 +92,7 @@ the Reviewer audits the diff against the same list: one source of truth, no drif
 - **Cost guards**: cap tokens, add timeouts, rate-limit model-calling endpoints;
   an unmetered LLM endpoint is a wallet-drain vulnerability.
 
-## 7. Reviewer diff-scan (run these, in order)
+## 7. Gatekeeper diff-scan (run these, in order)
 
 1. `git diff` for secrets: grep the diff for `api[_-]?key`, `secret`, `token`,
    `password`, `Bearer `, `sk-`, long base64/hex literals. Check `git status` for
@@ -124,7 +124,7 @@ logging, permissive CORS, missing security headers = **NEEDS WORK**.
 - [ ] Every new endpoint: authn + ownership/tenant check you can point to
 - [ ] Errors fail closed and leak no internals
 - [ ] LLM calls (if any): injection boundary, output treated as untrusted, tools least-privilege, cost caps
-- [ ] Reviewer ran §7 greps on the actual diff: not from memory
+- [ ] Gatekeeper ran §7 greps on the actual diff: not from memory
 
 > Credits: adapted for this pipeline from [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp)
 > (MIT) and the OWASP Top 10:2025 / LLM Top 10 guidance it distills.

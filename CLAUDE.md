@@ -37,7 +37,7 @@ Before any other work, run `git remote -v` and look at the current folder name.
 
 ## Hard constraints
 
-[Non-negotiable rules from the client, brief, or platform. Every agent reads this section; the planner copies the relevant ones into the spec's Context, and the reviewer blocks any diff that breaks one. Delete the examples that don't apply.]
+[Non-negotiable rules from the client, brief, or platform. Every agent reads this section; the planner copies the relevant ones into the spec's Context, and the gatekeeper blocks any diff that breaks one. Delete the examples that don't apply.]
 
 - [e.g. Output is ONE self-contained HTML file, opens offline by double-click]
 - [e.g. No payroll or salary data may be read or displayed]
@@ -84,7 +84,7 @@ When Target is "none", `/ship` never offers the deployer stage.
 
 ## Model override
 
-[Optional. The default tiering is in each agent file: planner, designer, reviewer on `opus`; coder, tester, deployer on `sonnet`. List an agent here to run it on a different model in this project, without editing the agent file. Leave the table empty to use the defaults.]
+[Optional. The default tiering is in each agent file: planner, drafter, gatekeeper on `opus`; coder, tester, deployer on `sonnet`. List an agent here to run it on a different model in this project, without editing the agent file. Leave the table empty to use the defaults.]
 
 | Agent | Model | Why |
 |---|---|---|
@@ -114,23 +114,23 @@ When Target is "none", `/ship` never offers the deployer stage.
 
 ## /ship and /fix pipelines
 
-This project uses 6 subagents (planner, designer, coder, tester, reviewer, deployer) in `.claude/agents/`.
-The `/ship [feature description]` command runs them in order (designer is skipped automatically if the feature has no UI surface; deployer is offered only after the reviewer's verdict is SHIP, and never when Deployment Target is "none").
-The `/fix [change request]` command is the lighter path for revising a feature that already exists: the main session writes a short spec, then coder, tester, and reviewer run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
+This project uses 6 subagents (planner, drafter, coder, tester, gatekeeper, deployer) in `.claude/agents/`.
+The `/ship [feature description]` command runs them in order (drafter is skipped automatically if the feature has no UI surface; deployer is offered only after the gatekeeper's verdict is SHIP, and never when Deployment Target is "none").
+The `/fix [change request]` command is the lighter path for revising a feature that already exists: the main session writes a short spec, then coder, tester, and gatekeeper run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
 Each run archives the previous `.pipeline/` artifacts (including screenshots in `.pipeline/shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them. The coder must pass the build within 3 fix attempts or write `## BLOCKED` into the changelog, which stops the chain.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.
 
 Fifteen bundled skills in `.claude/skills/` set the quality bar per stage (full matrix in README):
 the **planner** consults `relational-mastery` when the feature touches persisted data (normalization, FK lifecycles, index strategy for the spec's Data model section),
 `api-contract-guardian` when data crosses layers (a Contract table for database, API, and UI), and `performance-profiler` when the feature reads lists or grows with usage (expected data scale);
-the **coder** follows `architecture-clean-code` while writing (layers, no dead code, no third copy) and the **reviewer** checks the diff against it, plus the contract and performance checks when they apply;
-the **designer** consults `premium-design` (palette discipline, typography metrics, intentional motion, context adaptation)
+the **coder** follows `architecture-clean-code` while writing (layers, no dead code, no third copy) and the **gatekeeper** checks the diff against it, plus the contract and performance checks when they apply;
+the **drafter** consults `premium-design` (palette discipline, typography metrics, intentional motion, context adaptation)
 and `ux-research` (user + JTBD grounding, named psychology principles, usability checklist, dark-pattern hard-lines: its 10-question diagnostic is also run by the **tester** on driven UI);
-the **coder** and **reviewer** share `secure-coding`: one OWASP-derived bar applied while writing and re-audited on the diff;
+the **coder** and **gatekeeper** share `secure-coding`: one OWASP-derived bar applied while writing and re-audited on the diff;
 the **coder** follows `systematic-debugging` on NEEDS WORK fix rounds (root cause first, 3-strikes rule);
 the **tester** follows `testing-discipline` (no PASS without fresh evidence);
 the **deployer** applies `secure-coding` §4 to env-var and infra config it prepares post-SHIP;
-the **designer**, **coder**, and **tester** share five `antislop` skills adapted from [anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT): the core filter (Design Read, dials, Delivery Gate), `antislop-ui`, `antislop-layoutmobile`, `antislop-human` (with a contrast script), and `antislop-code` for comments. The designer and coder apply them while working; the tester audits with them.
-`humanizer` keeps UI text from reading as AI-written: the **designer** runs it over every piece of copy in the spec, the **coder** follows it for any text it writes itself, and the **tester** reads new text against it.
+the **drafter**, **coder**, and **tester** share five `antislop` skills adapted from [anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT): the core filter (Design Read, dials, Delivery Gate), `antislop-ui`, `antislop-layoutmobile`, `antislop-human` (with a contrast script), and `antislop-code` for comments. The drafter and coder apply them while working; the tester audits with them.
+`humanizer` keeps UI text from reading as AI-written: the **drafter** runs it over every piece of copy in the spec, the **coder** follows it for any text it writes itself, and the **tester** reads new text against it.
 
-For one-line tasks, neither command is required; just ask Claude Code directly. Anything a reviewer should see goes through `/fix` at minimum.
+For one-line tasks, neither command is required; just ask Claude Code directly. Anything a gatekeeper should see goes through `/fix` at minimum.
