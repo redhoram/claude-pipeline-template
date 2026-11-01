@@ -31,7 +31,7 @@ The target is the narrow band between them: confident, restrained, intentional.
 - Pair a DISPLAY font (headlines) with a BODY font, e.g. Space Grotesk / Outfit +
   Inter / Plus Jakarta Sans. Never leave it to system default.
 - Big headlines: `tracking-tight`, `leading-none`/`leading-tight` for a punchy, integrated look.
-- Eyebrows / small caps: `tracking-wide`+ uppercase for an editorial feel.
+- Small caps labels: moderate tracking (about `tracking-wide`, never extreme letter-spacing), and never as an eyebrow badge stacked above the main headline (antislop R-06).
 - Body: `leading-relaxed`, comfortable measure. Let it breathe.
 - Scale responsively with intent: `text-5xl md:text-7xl`, not one fixed size.
 
@@ -44,7 +44,7 @@ The target is the narrow band between them: confident, restrained, intentional.
   vanishes if JS fails or is slow. Apply the hidden state via a JS-added class (e.g. `js-ready`
   on `<body>`), so the CSS default stays visible. Always add `prefers-reduced-motion: reduce`
   to skip animations entirely for users who need it.
-- Standard transition: `transition-all duration-300 ease-in-out`. Smooth, never abrupt.
+- Standard transition: `transition-[transform,translate,scale,rotate,opacity] duration-300 ease-in-out` (Tailwind v4 treats translate, scale, and rotate as separate properties). Smooth, never abrupt. Never `transition-all`: it animates layout properties and causes jank.
 - Every motion must have a job: reveal, feedback, or emphasis. No job → cut it.
 
 ## 4. Layout & spacing: let it breathe
