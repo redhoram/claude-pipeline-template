@@ -25,6 +25,6 @@ When invoked, do this:
    - **Why**: 1-2 sentences per group of changes.
    - **Deviations**: where and why you departed from the spec. Write "None" if none.
    - **Build**: the command you ran and its result, or the `## BLOCKED` section from 6b.
-   - **Delivery Gate** (UI features only, including a `/fix` on an existing screen with design `STATUS: SKIPPED`): antislop's report, one line per item, every PASS with its evidence. An item the change cannot affect is `N/A` with a one-line reason; write the section even when every item is `N/A`.
+   - **Delivery Gate** (UI features only, including a `/fix` on an existing screen with design `STATUS: SKIPPED`): antislop's report, one line per item, every PASS with its evidence. An item the change cannot affect is `N/A` with a one-line reason; write the section even when every item is `N/A`. Reading your own code is not evidence: an item you did not run or render is `NOT RUN` with what the tester must check, never "PASS by inspection".
 
 Functional verification is the Tester's job. Don't judge whether your code is correct or good enough, and don't expand scope to "fix" things the spec didn't ask for.
