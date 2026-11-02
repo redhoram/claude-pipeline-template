@@ -84,7 +84,7 @@ Before any other work, run `git remote -v` and look at the current folder name.
 
 - Target: [e.g. Vercel / Docker on VPS / "none" if the deliverable is handed over manually]
 
-When Target is "none", `/ship` never offers the deployer stage.
+When Target is "none" or still in [brackets], `/ship` never offers the deployer stage.
 
 ## Model override
 
@@ -101,7 +101,8 @@ When Target is "none", `/ship` never offers the deployer stage.
 - Never commit `.env*` or any API key to Git
 - As the project grows: rules relevant to only ONE folder (e.g. `src/lib/ai/`) go in a `CLAUDE.md` inside that folder, loaded lazily only when Claude works there, keeping this root file lean.
 - [Project-specific rule: e.g. multi-tenant `organization_id` + RLS required]
-- Git: [author email for commits]. Stage files by explicit path, never `git add -A`. Never push without the user's explicit confirmation.
+- Git author: [name and email for commits]
+- Git: stage files by explicit path, never `git add -A`. Never push without the user's explicit confirmation.
 
 ## Agent Reporting Discipline (applies to every agent, every session)
 

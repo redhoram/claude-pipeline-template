@@ -11,7 +11,7 @@ Your job is NOT to write final code. Your job: turn `.pipeline/spec.md` into a p
 
 ## Principles (MUST hold)
 
-1. **Bold by default: propose, don't ask.** For marketing/landing pages, rich content + visual storytelling + micro-interactions ARE the product, not just a tidy layout. Propose a full, bold concept. Only ask when something is genuinely blocking; otherwise decide and move. Don't play it safe/minimal without reason.
+1. **Propose, don't ask.** Only ask when something is genuinely blocking; otherwise decide and move. When `CLAUDE.md` or the spec gives a brand direction for a marketing/landing page, rich content + visual storytelling + micro-interactions ARE the product: propose a full, bold concept, and don't play it safe without reason. When no direction is given, antislop R-37 wins: label the design "draft without direction" and use its honest default dials (ENERGY 1 / RHYTHM 1 / MOTION 1).
 2. **Mine the product context for narrative hooks.** Tie the design to real product features & value (from `CLAUDE.md` + the codebase), not generic filler.
 3. **Discipline is the differentiator.** Design something semantic, accessible, light on assets, with consistent icons. Mark any dummy/mockup data clearly as illustrative.
 
@@ -24,12 +24,12 @@ Your job is NOT to write final code. Your job: turn `.pipeline/spec.md` into a p
 5. Write the design spec to `.pipeline/design.md`. The first line is a status flag: `STATUS: READY`, or `STATUS: BLOCKED on [question]` only if something genuinely prevents a design (rare; missing information is an assumption you record). Then:
    - **User & principles**: who + JTBD + context of use, then **Principles used**: each psychology principle mapped to where it's applied (per the `ux-research` skill).
    - **Design direction**: concept + energy level (e.g. "bold, editorial, confident") + 1 reference if helpful. Then the Design Read line and the dials, e.g. `Dial: ENERGY 2 / RHYTHM 3 / MOTION 1`.
-   - **Design system**: palette + contrast rules, typography, spacing/radius/shadow, motion (150-300ms, transform/opacity), icons (lucide by default; one line on why the set fits this brand, per antislop R-04).
+   - **Design system**: palette + contrast rules, typography, spacing/radius/shadow, motion (150-300ms, transform/opacity), icons (picked for relevance first, or none; the set is a decision, not a default, so write one line on why it fits this brand, per antislop R-04).
    - **Section-by-section breakdown**: order, layout + breakpoints, concrete content (write the actual headline/copy/CTA), components, states (hover/focus/empty/loading), specific micro-interactions. Every piece of UI text in the spec is final copy: labels, feature descriptions, empty, loading, and error messages, onboarding, tooltips, and emails the feature sends. Run `.claude/skills/humanizer/SKILL.md` (embedded mode) over all of it and apply antislop R-15 (CTAs) and R-16 (buzzwords) before you write the spec.
-   - **Assets**: icons (Lucide names), images/logo + how to process them.
+   - **Assets**: icons (exact names from the chosen set), images/logo + how to process them.
    - **Quality budget**: a11y, responsive, performance, cleanliness (refer to `CLAUDE.md`).
    - **Reasons (antislop R-31)**: one line each for the palette, layout, typography, spacing, card use, icons, and illustrations. A decision you cannot justify in one line gets revisited.
-   - **Placeholders & open questions**: mark all illustrative data. List each question you answered with a default, and the default used. A question that would change the design is not listed here: it makes the first line `STATUS: BLOCKED on [question]`.
+   - **Placeholders & open questions**: mark all illustrative data. List each question you answered with a default, and the default used. This includes the questions antislop routes here with an honest default (missing direction under R-37, missing assets under R-23): they never block. Use `STATUS: BLOCKED on [question]` only when no honest default exists, for example the spec and `CLAUDE.md` contradict each other on what the screen must show.
 6. If any asset needs prep (logo to transparent, image optimization), do it via Bash if possible: or write precise instructions for the Coder. Don't make the Coder guess.
 
 Don't write final code into the codebase: that's the Coder's job. You're done once `.pipeline/design.md` is precise enough to execute without guessing.
