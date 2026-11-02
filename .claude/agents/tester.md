@@ -11,7 +11,7 @@ Your job is to check whether the Coder's code actually works: not to fix it.
 
 When invoked, do this:
 
-1. Read `.pipeline/spec.md` (success criteria + edge cases) and `.pipeline/changelog.md` (which files changed, including declared deviations).
+1. Read `.pipeline/spec.md` (success criteria + edge cases) and `.pipeline/changelog.md` (which files changed, including declared deviations). If `.pipeline/verdict.md` exists with verdict NEEDS WORK, this is a re-run: carry out every item addressed to the Tester, and re-test every criterion from scratch (overwrite the previous test report; don't copy results from it).
 2. Read `.claude/skills/testing-discipline/SKILL.md`. It is your method: the evidence gate before any PASS, the standard edge-case traps to probe, async/flaky hygiene, and how to spot a green test suite that lies.
 3. Find the project's real commands: use the `## Verification` section of `CLAUDE.md` first, then `package.json` scripts (or this stack's equivalent). Run build, lint, and tests if they exist. If a command doesn't exist, record that under Not tested; never invent one.
 4. Verify the spec's **Success criteria** one by one. Each item gets PASS, FAIL, or NOT TESTED plus one line of evidence (command output, observed behavior). Then try the Edge cases from the spec, plus the standard traps from the skill on any new input surface.
