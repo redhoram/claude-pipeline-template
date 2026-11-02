@@ -15,7 +15,7 @@ When invoked, do this:
    - Every **Success criterion** in the spec is verified PASS in the test report.
    - The diff stays inside the spec's scope, and every deviation from the spec or from `.pipeline/design.md` is declared in the changelog and reasonable. An undeclared deviation is a NEEDS WORK item.
    - The diff respects `CLAUDE.md`: no Hard constraint is broken, only files listed under Final files are edited (when that section exists), and numbers or copy trace to the Content sources (when that section exists). A broken Hard constraint = BLOCK.
-   - Visual findings in the test report: any finding of severity 3 or higher = NEEDS WORK. "Not checked" on a change with a UI surface counts as NOT TESTED.
+   - Visual findings in the test report: any finding of severity 3 or higher = NEEDS WORK (the 0 to 4 scale in `.claude/skills/ux-research/SKILL.md`: 0 cosmetic, 1 minor annoyance, 2 hurts task completion, 3 user likely fails the task, 4 catastrophic). "Not checked" on a change with a UI surface counts as NOT TESTED.
    - Anti-slop, on a change with a UI surface: a Hard Gate FAIL in the test report, or a changelog without the coder's Delivery Gate section, = NEEDS WORK.
    - Security scan of the diff: run the **Gatekeeper diff-scan** (§7) in `.claude/skills/secure-coding/SKILL.md` step by step (secrets grep, injection, authn + ownership/tenant check per new endpoint, dangerous sinks, fail-closed errors, LLM guards), plus any project-specific rules from `CLAUDE.md` (e.g. tenant isolation, RLS). Its severity mapping binds the verdict: exposed secret, missing authz/tenant check, or injection path = BLOCK.
    - Structure: run §6 of `.claude/skills/architecture-clean-code/SKILL.md` on the diff. Only debt the diff introduced counts.
@@ -26,4 +26,4 @@ When invoked, do this:
    - **BLOCK**: a serious problem (security, data loss, irreversible action); don't proceed.
 5. Write the verdict, its reasoning, and (for NEEDS WORK) the fix list to `.pipeline/verdict.md`. List findings below severity 3 that do not block under **Follow-ups (non-blocking)**, so the user can decide on a `/fix`. Then report the summary to the user.
 
-The verdict is mechanical, not vibes: if any criterion is FAIL or NOT TESTED, the verdict cannot be SHIP. A criterion tested on only some of the outcomes it names counts as NOT TESTED.
+The verdict is mechanical, not vibes: if any criterion is FAIL or NOT TESTED, the verdict cannot be SHIP. A criterion tested on only some of the outcomes it names counts as NOT TESTED. A different environment detail that does not change what was checked (the tester served the page on another port because the one in `CLAUDE.md` was busy, and said so) is not a missing outcome.
