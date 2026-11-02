@@ -21,7 +21,8 @@ Before any other work, run `git remote -v` and look at the current folder name.
 3. **Copy: auto-fix without asking.** Any other folder name AND remote
    contains `claude-pipeline-template`. Placeholder state does not matter.
    Run immediately (bash), no confirmation needed. The old `.git` is moved
-   to the temp dir, not deleted, so nothing is lost:
+   to the temp dir, not deleted, so nothing is lost. `git add -A` is safe
+   here only because the repo was just re-initialised and holds nothing yet:
    ```
    mv .git "/tmp/$(basename "$PWD")-template-git-$(date +%Y%m%d%H%M%S)" && git init -q && git add -A && git commit -q -m "chore: init from _pipeline-template"
    ```
@@ -77,6 +78,7 @@ Before any other work, run `git remote -v` and look at the current folder name.
 - Tests: [e.g. `npm test`, or "none"]
 - Run / render: [e.g. `npm run dev` on port 5173, or a headless browser command for a static file]
 - Visual check widths: [e.g. 375, 1280, 1440. Screens are captured at each width and looked at]
+- Signed-in screens: [where the tester finds a test account or seed user, e.g. "seed user in `supabase/seed.sql`, password in `.env.local` as TEST_USER_PASSWORD", or "none". Point to the place; never write a password here]
 
 ## Deployment
 
@@ -86,7 +88,7 @@ When Target is "none", `/ship` never offers the deployer stage.
 
 ## Model override
 
-[Optional. The default tiering is in each agent file: planner, drafter, gatekeeper on `opus`; coder, tester, deployer on `sonnet`. List an agent here to run it on a different model in this project, without editing the agent file. Leave the table empty to use the defaults.]
+[Optional. The default tiering is in each agent file: planner, drafter, gatekeeper on `opus`; coder, tester, deployer on `sonnet`. List an agent here to run it on a different model in this project, without editing the agent file. Leave the table empty to use the defaults. A row still in [brackets] is an example and is ignored.]
 
 | Agent | Model | Why |
 |---|---|---|
@@ -117,7 +119,8 @@ When Target is "none", `/ship` never offers the deployer stage.
 ## /ship and /fix pipelines
 
 This project uses 6 subagents (planner, drafter, coder, tester, gatekeeper, deployer) in `.claude/agents/`.
-The `/ship [feature description]` command runs them in order (drafter is skipped automatically if the feature has no UI surface; deployer is offered only after the gatekeeper's verdict is SHIP, and never when Deployment Target is "none").
+A line, bullet, or table row in this file still in [brackets] is an unfilled placeholder: every agent treats it as absent and follows the assumption the planner wrote in the spec's Context under **Unfilled in CLAUDE.md**. Never run an [e.g. ...] command and never enforce an [e.g. ...] constraint.
+The `/ship [feature description]` command runs them in order (when the feature has no UI surface the drafter writes `STATUS: SKIPPED` and the design checks are skipped; deployer is offered only after the gatekeeper's verdict is SHIP, and never when Deployment Target is "none").
 The `/fix [change request]` command is the lighter path for revising a feature that already exists: the main session writes a short spec, then coder, tester, and gatekeeper run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
 Each run archives the previous `.pipeline/` artifacts (including screenshots in `.pipeline/shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them. The coder must pass the build within 3 fix attempts or write `## BLOCKED` into the changelog, which stops the chain.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.

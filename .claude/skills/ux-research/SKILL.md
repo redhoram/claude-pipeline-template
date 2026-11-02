@@ -12,7 +12,7 @@ users is a failed page.
 
 ## 1. Ground the design first (Drafter, before any visual decision)
 
-Answer in 2-3 sentences at the top of `design.md`, derived from `spec.md` + `CLAUDE.md`,
+Answer in 2-3 sentences right after the STATUS line of `design.md`, derived from `spec.md` + `CLAUDE.md`,
 NOT from an invented persona document:
 
 - **Who** uses this surface, and **what job** are they hiring it to do (JTBD)?
