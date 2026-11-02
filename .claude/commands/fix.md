@@ -13,13 +13,13 @@ Run this sequence IN ORDER:
 0. **Archive the workspace** exactly as in step 0 of `.claude/commands/ship.md`, including the **Model override** rule.
 1. **Write the spec yourself** to `.pipeline/spec.md`, in the planner's format but kept short. Open the files you name; never guess a path.
    - **Goal**: one sentence.
-   - **Context**: the files to change (opened, named), the existing patterns to keep, and the relevant rules from `CLAUDE.md` (Hard constraints, Final files, Content sources).
+   - **Context**: the files to change (opened, named), the existing patterns to keep, and the relevant rules from `CLAUDE.md` (Hard constraints, Final files, Content sources). When a `CLAUDE.md` line the change depends on is still in [brackets] (Visual check widths, Lint, Tests, and so on), add an **Unfilled in CLAUDE.md** list with the default assumed, using the planner's defaults in `.claude/agents/planner.md`.
    - **Scope** and **Out of scope**. Out of scope always includes "every screen and file not named in Scope".
    - **Data model**: exactly "No data changes". If data changes, stop: this is a `/ship`.
    - **Success criteria**: a `- [ ]` checklist of individually verifiable statements. For UI changes, include the visual result at the widths in `CLAUDE.md` Verification, and that old labels or text no longer appear anywhere.
    - **Task breakdown**, **Edge cases**.
    - **Open questions**: "None", or the questions whose answers change what gets built.
-2. **Open-questions gate**: if Open questions is not "None", STOP and ask the user. Write each answer into Context under **Decisions from the user** (question, answer, date), set Open questions to exactly "None", then continue. When a question came from a `CLAUDE.md` placeholder, also offer to write the answer into `CLAUDE.md`.
+2. **Open-questions gate**: if Open questions is not "None", STOP and ask the user. Write each answer into Context under **Decisions from the user** (question, answer, date), rewrite any part of the spec that assumed a different answer, set Open questions to exactly "None", then continue. When a question came from a `CLAUDE.md` placeholder, also offer to write the answer into `CLAUDE.md`.
 3. **Mark design as skipped**: write `.pipeline/design.md` with `STATUS: SKIPPED` on the first line, then: "Design skipped: revision via /fix. The existing UI is the design reference; keep its visual language."
 4. Call the **coder** subagent. Wait until `.pipeline/changelog.md` is written.
 5. Call the **tester** subagent. Wait until `.pipeline/test-report.md` is written.
