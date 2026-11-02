@@ -16,7 +16,7 @@ Run this sequence IN ORDER, don't skip:
 5. Call the **tester** subagent to check the result. Wait until `.pipeline/test-report.md` is written.
 6. Call the **gatekeeper** subagent for the final verdict.
 7. Show the final verdict (SHIP / NEEDS WORK / BLOCK) to the user with a summary of what happened at each stage.
-   - If **NEEDS WORK**: offer to re-run from **coder** (it reads `.pipeline/verdict.md` as the fix list) → tester → gatekeeper. When every item on the fix list is addressed to the tester (a coverage gap, no code change), offer to re-run tester → gatekeeper only. Don't loop automatically without user confirmation.
+   - If **NEEDS WORK**: offer to re-run from **coder** (it reads `.pipeline/verdict.md` as the fix list) → tester → gatekeeper. When every item on the fix list is addressed to the tester (a coverage gap, no code change), offer to re-run tester → gatekeeper only. Before any re-run, COPY (don't move: the coder and tester read it) the current `verdict.md`, `test-report.md`, and `changelog.md` into `.pipeline/archive/<YYYYMMDD-HHMM>-round/`, so the earlier round survives being overwritten. Don't loop automatically without user confirmation.
    - If **BLOCK**: stop completely, explain the problem to the user, don't proceed.
    - If **SHIP**:
      1. Offer to commit. Stage ONLY the files listed in `.pipeline/changelog.md`, by explicit path, never `git add -A`. Use the `Git author` and `Git` lines of `CLAUDE.md` Conventions; when `Git author` is still in [brackets], commit as the repo's configured git user and say so. Never push without the user's explicit confirmation.
