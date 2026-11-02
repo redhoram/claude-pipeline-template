@@ -19,8 +19,8 @@ Run this sequence IN ORDER:
    - **Success criteria**: a `- [ ]` checklist of individually verifiable statements. For UI changes, include the visual result at the widths in `CLAUDE.md` Verification, and that old labels or text no longer appear anywhere.
    - **Task breakdown**, **Edge cases**.
    - **Open questions**: "None", or the questions whose answers change what gets built.
-2. **Open-questions gate**: if Open questions is not "None", STOP and ask the user. Write the answers back into the spec, then continue.
-3. **Mark design as skipped**: write `.pipeline/design.md` with one line: "Design skipped: revision via /fix. The existing UI is the design reference; keep its visual language."
+2. **Open-questions gate**: if Open questions is not "None", STOP and ask the user. Write each answer into Context under **Decisions from the user** (question, answer, date), set Open questions to exactly "None", then continue. When a question came from a `CLAUDE.md` placeholder, also offer to write the answer into `CLAUDE.md`.
+3. **Mark design as skipped**: write `.pipeline/design.md` with `STATUS: SKIPPED` on the first line, then: "Design skipped: revision via /fix. The existing UI is the design reference; keep its visual language."
 4. Call the **coder** subagent. Wait until `.pipeline/changelog.md` is written.
 5. Call the **tester** subagent. Wait until `.pipeline/test-report.md` is written.
 6. Call the **gatekeeper** subagent for the final verdict.

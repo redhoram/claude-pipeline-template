@@ -32,4 +32,4 @@ You are designing the data layer. Schema designs must prioritize data integrity,
 - [ ] Ownership/tenant column named on every user-data table
 
 > Credits: adapted from the `relational-mastery` skill in
-> [antigravity-pipeline-template](https://github.com/redhoram/antigravity-pipeline-template) (same author, MIT).
+> the author's earlier, unpublished Antigravity pipeline template.

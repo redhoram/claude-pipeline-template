@@ -31,7 +31,7 @@ The target is the narrow band between them: confident, restrained, intentional.
 - Pair a DISPLAY font (headlines) with a BODY font, e.g. Space Grotesk / Outfit +
   Inter / Plus Jakarta Sans. Never leave it to system default.
 - Big headlines: `tracking-tight`, `leading-none`/`leading-tight` for a punchy, integrated look.
-- Small caps labels: moderate tracking (about `tracking-wide`, never extreme letter-spacing), and never as an eyebrow badge stacked above the main headline (antislop R-06).
+- Small caps labels: moderate tracking (about `tracking-wide`, never extreme letter-spacing), and never as an eyebrow badge stacked above the main headline (antislop R-06 for tracking; R-09 and the `antislop-ui` section "Eyebrow Badge Above the Headline" for the badge).
 - Body: `leading-relaxed`, comfortable measure. Let it breathe.
 - Scale responsively with intent: `text-5xl md:text-7xl`, not one fixed size.
 
@@ -44,7 +44,7 @@ The target is the narrow band between them: confident, restrained, intentional.
   vanishes if JS fails or is slow. Apply the hidden state via a JS-added class (e.g. `js-ready`
   on `<body>`), so the CSS default stays visible. Always add `prefers-reduced-motion: reduce`
   to skip animations entirely for users who need it.
-- Standard transition: `transition-[transform,translate,scale,rotate,opacity] duration-300 ease-in-out` (Tailwind v4 treats translate, scale, and rotate as separate properties). Smooth, never abrupt. Never `transition-all`: it animates layout properties and causes jank.
+- Standard transition: name the properties that move, 150-300ms, ease-in-out. Tailwind v4: `transition-[transform,translate,scale,rotate,opacity] duration-300 ease-in-out` (v4 treats translate, scale, and rotate as separate properties). Plain CSS: `transition: transform 300ms ease-in-out, opacity 300ms ease-in-out`. Never `transition-all` or `transition: all`: it animates layout properties and causes jank.
 - Every motion must have a job: reveal, feedback, or emphasis. No job → cut it.
 
 ## 4. Layout & spacing: let it breathe
