@@ -40,7 +40,7 @@ Complex features need planning, implementation, testing, and review kept clearly
 
 ### Contents
 
-- `CLAUDE.md`: project instructions covering stack, hard constraints, final decisions, final files, content sources, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
+- `CLAUDE.md`: project instructions covering stack, hard constraints, final decisions, final files, content sources, where AI does not decide, verification commands, deployment target, model override, conventions, pipeline flow. **Fill in the placeholders first; delete the sections that don't apply.**
 - `.claude/agents/`: `planner`, `drafter`, `coder`, `tester`, `gatekeeper`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
 - `.claude/skills/`: 15 bundled skills the agents enforce (matrix below)
@@ -88,6 +88,20 @@ Worth knowing, deliberately **not** bundled: [`differential-review`](https://git
 What sets the output apart from instant generators: **planned, tested, and reviewed**, not just "it runs". Details in `CLAUDE.md` + each agent file.
 
 And **fail loud, not silent**: the coder stops on a missing or ambiguous spec instead of guessing, the tester reports failures verbatim without patching over them, and the verdict is mechanical: any FAIL or NOT TESTED criterion means it cannot be SHIP.
+
+### Where AI does not decide
+
+- Pushing, merging, and deploying. The pipeline prepares the commit and the deploy config; you push and deploy.
+- Production secrets and access. The deployer lists the environment variables; you set the values.
+- Running anything that deletes or rewrites real data in production.
+- Loosening a success criterion or a hard constraint to reach SHIP. The chain stops and you decide.
+- Legal, licensing, and privacy calls. Agents flag them; a person decides.
+
+### Limits
+
+- The tester and the gatekeeper catch many errors but not all of them. SHIP means the checks in the spec passed, not that the code is free of bugs or security holes.
+- Tests only cover what the spec names. Review the spec before the coder runs.
+- Output quality depends on the model and on the context you give it.
 
 ### Credit
 

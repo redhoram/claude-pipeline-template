@@ -40,7 +40,7 @@ Fitur kompleks butuh perencanaan, implementasi, pengujian, dan review yang terpi
 
 ### Isi
 
-- `CLAUDE.md`: instruksi project berisi stack, batasan keras, keputusan final, file final, sumber konten, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
+- `CLAUDE.md`: instruksi project berisi stack, batasan keras, keputusan final, file final, sumber konten, yang tidak diputuskan AI, perintah verifikasi, target deployment, model override, konvensi, alur pipeline. **Isi placeholder-nya dulu; hapus bagian yang nggak relevan.**
 - `.claude/agents/`: `planner`, `drafter`, `coder`, `tester`, `gatekeeper`, `deployer`
 - `.claude/commands/`: `ship`, `fix`
 - `.claude/skills/`: 15 skill bawaan yang ditegakkan para agent (matriks di bawah)
@@ -88,6 +88,20 @@ Patut tahu, sengaja **nggak** di-bundle: [`differential-review`](https://github.
 Yang bikin output beda dari generator instan: **terencana, teruji, dan di-review**, bukan sekadar jalan. Detail di `CLAUDE.md` + tiap file agent.
 
 Dan **gagal keras, bukan diam-diam**: coder berhenti kalau spec hilang/ambigu daripada nebak, tester lapor kegagalan apa adanya tanpa nambal, dan verdict-nya mekanis: ada satu aja kriteria FAIL atau NOT TESTED berarti nggak mungkin SHIP.
+
+### Yang tidak diputuskan AI
+
+- Push, merge, dan deploy. Pipeline menyiapkan commit dan konfigurasi deploy, kamu yang push dan deploy.
+- Secret dan akses production. Deployer mendaftar environment variable-nya, kamu yang mengisi nilainya.
+- Menjalankan apa pun yang menghapus atau menulis ulang data asli di production.
+- Melonggarkan kriteria sukses atau batasan keras demi SHIP. Rantainya berhenti dan kamu yang memutuskan.
+- Urusan hukum, lisensi, dan privasi. Agent menandainya, manusia yang memutuskan.
+
+### Batasan
+
+- Tester dan gatekeeper menangkap banyak kesalahan, tapi tidak semuanya. SHIP berarti cek di spec lolos, bukan berarti kodenya bebas bug atau celah keamanan.
+- Tes hanya mencakup yang disebut spec. Baca spec-nya sebelum coder jalan.
+- Kualitas hasil bergantung pada model dan konteks yang kamu berikan.
 
 ### Kredit
 
