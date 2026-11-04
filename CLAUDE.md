@@ -69,6 +69,20 @@ Before any other work, run `git remote -v` and look at the current folder name.
 - Numbers: [e.g. `docs/model.md`]
 - Copy and terminology: [e.g. `docs/prd.md`]
 
+## Where AI does not decide
+
+These stay with the user, whatever any agent writes:
+
+- Pushing, merging, and deploying. Agents prepare the commit and the deploy config; the user pushes and deploys.
+- Production secrets and access. The deployer names the environment variables a change needs; the user sets the values, grants access, and rotates keys.
+- Running anything that deletes or rewrites real data (a destructive migration, a bulk delete, a schema change on a live database). The spec describes it; the user runs it against production.
+- Dropping or loosening a success criterion or a Hard constraint to reach SHIP. If one cannot be met, the chain stops and the user decides whether the spec changes.
+- Legal, licensing, and privacy calls (a third-party license, terms of service, which personal data may be stored). Agents flag them; they do not certify them.
+
+Honest limits: the tester and the gatekeeper lower the error rate but do not
+remove it. SHIP means the checks in the spec passed, not that the code is free
+of bugs or security holes.
+
 ## Verification
 
 [The exact commands the tester runs. The tester uses ONLY these; it never invents a command. If the stack has no package.json (e.g. a single HTML file), write the render or test command here.]
