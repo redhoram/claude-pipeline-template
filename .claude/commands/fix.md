@@ -1,5 +1,5 @@
 ---
-description: Runs a lighter Coder → Tester → Gatekeeper pass to revise a feature that already exists, with a short spec written by the main session.
+description: Runs a lighter Coder → Tester → Gatekeeper pass to revise a feature that already exists, with a short spec written by the Engineering Manager.
 ---
 
 User's change request: $ARGUMENTS
@@ -8,7 +8,7 @@ Use `/fix` to revise something already built: a rename, a copy change, a layout 
 
 Use `/ship` instead when the request adds a new screen or feature, changes persisted data, adds a dependency, or changes the visual language. If you discover this mid-way, stop and tell the user to run `/ship`.
 
-Run this sequence IN ORDER:
+You are the Engineering Manager. Run this sequence IN ORDER:
 
 0. **Archive the workspace** exactly as in step 0 of `.claude/commands/ship.md`, including the **Model override** rule.
 1. **Write the spec yourself** to `.pipeline/spec.md`, in the planner's format but kept short. Open the files you name; never guess a path.

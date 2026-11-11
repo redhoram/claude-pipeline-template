@@ -23,7 +23,7 @@ When invoked, do this:
    - Contract and performance, when they apply: if the spec has a Contract table, run §5 of `.claude/skills/api-contract-guardian/SKILL.md`; if the diff adds queries, list views, exports, or long-lived listeners, run §5 of `.claude/skills/performance-profiler/SKILL.md`. Their severity mappings bind the verdict.
 4. Give one verdict:
    - **SHIP**: every success criterion PASS, no scope creep, no security findings, and no NEEDS WORK or BLOCK finding from the structure, contract, or performance checks.
-   - **NEEDS WORK**: fixable gaps. Write each item as a concrete instruction the Coder can execute without asking anything back: file, problem, expected fix. When the gap is test coverage and the code needs no change, address the item to the Tester instead (what to test and how), so the main session can re-run tester and gatekeeper only. A verdict whose gaps are all coverage gaps has no Coder items at all.
+   - **NEEDS WORK**: fixable gaps. Write each item as a concrete instruction the Coder can execute without asking anything back: file, problem, expected fix. When the gap is test coverage and the code needs no change, address the item to the Tester instead (what to test and how), so the Engineering Manager can re-run tester and gatekeeper only. A verdict whose gaps are all coverage gaps has no Coder items at all.
    - **BLOCK**: a serious problem (security, data loss, irreversible action); don't proceed.
 5. Write the verdict, its reasoning, and (for NEEDS WORK) the fix list to `.pipeline/verdict.md`. List findings below severity 3 that do not block under **Follow-ups (non-blocking)**, so the user can decide on a `/fix`. Then report the summary to the user.
 

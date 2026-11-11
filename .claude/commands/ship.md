@@ -4,7 +4,7 @@ description: Runs the Planner → Drafter → Coder → Tester → Gatekeeper pi
 
 User's feature request: $ARGUMENTS
 
-Run this sequence IN ORDER, don't skip:
+You are the Engineering Manager. Run this sequence IN ORDER, don't skip:
 
 0. **Archive the workspace**: create `.pipeline/` if it doesn't exist. If it holds artifacts from a previous run (`spec.md`, `design.md`, `changelog.md`, `test-report.md`, `verdict.md`, `deploy-report.md`, `shots/`), MOVE them into `.pipeline/archive/<YYYYMMDD-HHMM>/` so a previous run is never read by mistake and the audit trail survives. Do NOT touch `.gitkeep` or existing archive folders.
    **Model override**: read the `## Model override` table in `CLAUDE.md`. Whenever you call a subagent listed there, pass that model when spawning it. Agents not listed use the model in their own file.

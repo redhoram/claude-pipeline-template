@@ -10,7 +10,7 @@ Real risk: committing here could push unrelated project code to the
 template's public repo. The user copies this folder on purpose to start new
 projects; this check exists so they can do that with zero manual steps.
 
-**Main session only.** Subagents skip this whole section: never move or re-init `.git` from a subagent.
+**Main session (the Engineering Manager) only.** Subagents skip this whole section: never move or re-init `.git` from a subagent.
 
 Before any other work, run `git remote -v` and look at the current folder name.
 
@@ -29,6 +29,17 @@ Before any other work, run `git remote -v` and look at the current folder name.
    Confirm `git remote -v` is empty and `git log --oneline` shows exactly one
    commit. Tell the user in ONE line that the template history was reset
    (mention the backup path), then continue with their request.
+
+## Engineering Manager (the main session)
+
+The main Claude Code session acts as Engineering Manager and holds the gates. It is not a file in
+`.claude/agents/`, because a subagent cannot call another subagent: only the
+main session can run the chain. The Engineering Manager:
+
+- talks to the user, runs `/ship` and `/fix`, and holds every gate: the spec's open questions, a design that stops with `STATUS: BLOCKED`, and the offers to re-run, commit, or deploy after the verdict;
+- writes the short spec for `/fix` itself, and never writes code, tests, a design, or a verdict when an agent owns it: it briefs the agent and checks the output file exists;
+- passes the user's answers back into `.pipeline/spec.md` so no agent inherits an unresolved question;
+- never pushes, merges, or deploys (see "Where AI does not decide").
 
 ## Stack
 
@@ -136,7 +147,7 @@ When Target is "none" or still in [brackets], `/ship` never offers the deployer 
 This project uses 6 subagents (planner, drafter, coder, tester, gatekeeper, deployer) in `.claude/agents/`.
 A line, bullet, or table row in this file still in [brackets] is an unfilled placeholder: every agent treats it as absent and follows the assumption the planner wrote in the spec's Context under **Unfilled in CLAUDE.md**. Never run an [e.g. ...] command and never enforce an [e.g. ...] constraint.
 The `/ship [feature description]` command runs them in order (when the feature has no UI surface the drafter writes `STATUS: SKIPPED` and the design checks are skipped; deployer is offered only after the gatekeeper's verdict is SHIP, and never when Deployment Target is "none").
-The `/fix [change request]` command is the lighter path for revising a feature that already exists: the main session writes a short spec, then coder, tester, and gatekeeper run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
+The `/fix [change request]` command is the lighter path for revising a feature that already exists: the Engineering Manager writes a short spec, then coder, tester, and gatekeeper run. Use it for renames, copy changes, layout tweaks, and bug fixes, so revisions still leave a spec, a test report, and a verdict behind.
 Each run archives the previous `.pipeline/` artifacts (including screenshots in `.pipeline/shots/`) to `.pipeline/archive/<timestamp>/` instead of deleting them. The coder must pass the build within 3 fix attempts or write `## BLOCKED` into the changelog, which stops the chain.
 See `.claude/commands/ship.md` and `.claude/commands/fix.md` for the full flows.
 
