@@ -141,6 +141,14 @@ When Target is "none" or still in [brackets], `/ship` never offers the deployer 
 - If a status changes from "blocked"/"in progress" to "done" with no
   visible verification steps in between (no tool calls, no fresh evidence),
   that's not done: go back and actually do it, or report it as blocked.
+- Servers and browsers: any agent, and the Engineering Manager, that starts
+  a server or a browser follows `.claude/agents/tester.md` step 4c: record the
+  Windows PID at start, check the port on every address first, and stop it by
+  that PID before finishing. Never stop a process by image name or by matching
+  its command line or port (`taskkill /IM`, `Stop-Process -Name`, `pkill`,
+  `killall`, a `Get-CimInstance` filter): that can stop the user's own servers,
+  editor, or browser. If you lost the PID, leave the process running and report
+  its port and start command.
 
 ## /ship and /fix pipelines
 
